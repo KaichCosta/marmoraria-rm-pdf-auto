@@ -1,0 +1,84 @@
+import sys
+import fitz  # PyMuPDF
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
+
+class PreencherPDFApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.init_ui()
+        self.pdf_path = ""
+
+    def init_ui(self):
+        self.setWindowTitle("Orçamento PDF Marmoraria R&M")
+        self.setGeometry(100, 100, 400, 200)
+
+        layout = QVBoxLayout()
+
+        self.label_pdf = QLabel("Nenhum PDF selecionado")
+        layout.addWidget(self.label_pdf)
+
+        self.btn_selecionar = QPushButton("Selecionar PDF")
+        self.btn_selecionar.clicked.connect(self.selecionar_pdf)
+        layout.addWidget(self.btn_selecionar)
+
+        self.entry_loc1 = QLineEdit()
+        self.entry_loc1.setPlaceholderText("LOCAL")
+        layout.addWidget(self.entry_loc1)
+
+        self.entry_desc1 = QLineEdit()
+        self.entry_desc1.setPlaceholderText("DESCRIÇÃO")
+        layout.addWidget(self.entry_desc1)  
+
+        self.entry_qtd1 = QLineEdit()
+        self.entry_qtd1.setPlaceholderText("QUANTIDADE")
+        layout.addWidget(self.entry_qtd1)
+
+        self.entry_val1 = QLineEdit()
+        self.entry_val1.setPlaceholderText("VALOR")
+        layout.addWidget(self.entry_val1)
+
+        self.btn_preencher = QPushButton("Preencher PDF")
+        self.btn_preencher.clicked.connect(self.preencher_pdf)
+        layout.addWidget(self.btn_preencher)
+
+        self.setLayout(layout)
+
+    def selecionar_pdf(self):
+        file_dialog = QFileDialog()
+        file_path, _ = file_dialog.getOpenFileName(self, "Selecionar PDF", "", "Arquivos PDF (*.pdf)")
+        if file_path:
+            self.pdf_path = file_path
+            self.label_pdf.setText(f"Selecionado: {file_path}")
+
+    def preencher_pdf(self):
+        if not self.pdf_path:
+            QMessageBox.warning(self, "Erro", "Por favor, selecione um PDF primeiro.")
+            return
+
+        # Capturando os dados da interface
+        loc1 = self.entry_loc1.text()
+        desc1 = self.entry_desc1.text()
+        qtd1 = self.entry_qtd1.text()
+        val1 = self.entry_val1.text()
+
+        # Abrindo o PDF
+        doc = fitz.open(self.pdf_path)
+        page = doc[0]  # Pegando a primeira página do PDF
+
+        # Adicionando texto em posições específicas
+        page.insert_text((100, 150), loc1, fontsize=11.5, color=(0, 0, 0))
+        page.insert_text((100, 180), desc1, fontsize=11.5, color=(0, 0, 0))
+        page.insert_text((100, 210), qtd1, fontsize=11.5, color=(0, 0, 0))
+        page.insert_text((100, 180), val1, fontsize=11.5, color=(0, 0, 0))
+        # Criando um novo arquivo preenchido
+        novo_caminho = self.pdf_path.replace(".pdf", "_preenchido.pdf")
+        doc.save(novo_caminho)
+        doc.close()
+
+        QMessageBox.information(self, "Sucesso", f"PDF salvo como: {novo_caminho}")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = PreencherPDFApp()
+    window.show()
+    sys.exit(app.exec())
