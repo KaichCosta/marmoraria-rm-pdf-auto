@@ -56,6 +56,7 @@ class PreencherPDFApp(QWidget):
             return
 
         # Capturando os dados da interface
+        #Linha 1
         loc1 = self.entry_loc1.text()
         desc1 = self.entry_desc1.text()
         qtd1 = self.entry_qtd1.text()
@@ -63,13 +64,15 @@ class PreencherPDFApp(QWidget):
 
         # Abrindo o PDF
         doc = fitz.open(self.pdf_path)
-        page = doc[0]  # Pegando a primeira página do PDF
+        page = doc[7]  # Oitava página do PDF
 
         # Adicionando texto em posições específicas
-        page.insert_text((100, 150), loc1, fontsize=11.5, color=(0, 0, 0))
-        page.insert_text((100, 180), desc1, fontsize=11.5, color=(0, 0, 0))
-        page.insert_text((100, 210), qtd1, fontsize=11.5, color=(0, 0, 0))
-        page.insert_text((100, 180), val1, fontsize=11.5, color=(0, 0, 0))
+        page.insert_text((65.15, 293), loc1, fontsize=11.5, color=(0, 0, 0))
+        page.insert_text((260.5, 293), desc1, fontsize=11.5, color=(0, 0, 0))
+        page.insert_text((441.5, 293), qtd1, fontsize=11.5, color=(0, 0, 0))
+        page.insert_text((530.3, 293), val1, fontsize=11.5, color=(0, 0, 0))
+
+        #ALINHAMENTO Y DA SEGUNDA LINHA É 323
         # Criando um novo arquivo preenchido
         novo_caminho = self.pdf_path.replace(".pdf", "_preenchido.pdf")
         doc.save(novo_caminho)
