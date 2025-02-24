@@ -38,7 +38,7 @@ class PreencherPDFApp(QWidget):
         layout.addWidget(self.entry_val1)
 
         self.btn_preencher = QPushButton("Preencher PDF")
-        self.btn_preencher.clicked.connect(self.preencher_pdf)
+        self.btn_preencher.clicked.connect(self.enviar_dados)
         layout.addWidget(self.btn_preencher)
 
         self.setLayout(layout)
