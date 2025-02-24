@@ -1,6 +1,7 @@
 import sys
 import fitz  # PyMuPDF
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
+from gerador_pdf import preencher_pdf
 
 class PreencherPDFApp(QWidget):
     def __init__(self):
