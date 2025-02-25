@@ -1,12 +1,11 @@
-import sys
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
 from gerador_pdf import preencher_pdf
-
+pdf_padrao = "C:/Users/User/Documents/GitHub/marmoraria-rm-pdf-auto/orcamento-vazio.pdf"
 class PreencherPDFApp(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
-        self.pdf_path = ""
+        self.pdf_path = pdf_padrao
 
     def init_ui(self):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M")
