@@ -10,7 +10,7 @@ class PreencherPDFApp(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M")
-        self.setGeometry(100, 100, 400, 200)
+        self.setGeometry(300, 280, 400, 200)
 
         layout = QVBoxLayout()
 
