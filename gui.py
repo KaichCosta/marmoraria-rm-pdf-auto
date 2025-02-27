@@ -6,6 +6,9 @@ class PreencherPDFApp(QWidget):
         super().__init__()
         self.init_ui()
         self.pdf_path = pdf_padrao
+        self.posicoes = {}
+        self.contador =1
+
 
     def init_ui(self):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M")
@@ -92,12 +95,50 @@ class PreencherPDFApp(QWidget):
         layout.addLayout(Linha3)
         """======================================
         ---------------FIM LINHA 3---------------
-        ======================================"""  
+        ======================================"""
+        self.contador = 1
+
+        self.novos_campos()
+
+        self.btn_nova_linha = QPushButton("ADICIONAR NOVA LINHA")
+        self.btn_nova_linha.clicked.connect(self.novos_campos)
+        self.layout.addWidget(self.btn_nova_linha)
+
         self.btn_preencher = QPushButton("Preencher PDF")
         self.btn_preencher.clicked.connect(self.enviar_dados)
         layout.addWidget(self.btn_preencher)
 
-        self.setLayout(layout)
+        self.setLayout(self.layout)
+
+    def novos_campos(self):
+        Linha = QHBoxLayout()
+        entry_loc = QLineEdit()
+        entry_loc.setPlaceholderText("LOCAL")
+        Linha.addWidget(entry_loc)
+
+        entry_desc = QLineEdit()
+        entry_desc.setPlaceholderText("DESCRIÇÃO")
+        Linha.addWidget(entry_desc)
+
+        entry_qtd = QLineEdit()
+        entry_qtd.setPlaceholderText("QUANTIDADE")
+        Linha.addWidget(entry_qtd)
+
+        entry_val = QLineEdit()
+        entry_val.setPlaceholderText("VALOR")
+        Linha.addWidget(entry_val)
+
+        self.layout.addLayout(Linha)
+
+        chave = f"Linha{self.contador}"
+        self.dados[chave] = {
+            "local": entry_loc,
+            "descricao": entry_desc,
+            "quantidade": entry_qtd,
+            "valor": entry_val
+        }
+        self.posicoes[chave] = self.contador
+        self.contador += 1
 
     def selecionar_pdf(self):
         file_dialog = QFileDialog()
