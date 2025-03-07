@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
-from gerador_pdf import preencher_pdf, posicoes
-import sys
+from gerador_pdf import preencher_pdf, atualizar_posicoes, posicoes
+import sys 
 pdf_padrao = "C:/Users/User/Documents/GitHub/marmoraria-rm-pdf-auto/orcamento-vazio.pdf"
 dados = {}
 
@@ -88,10 +88,7 @@ class PreencherPDFApp(QWidget):
 
         self.layout.addLayout(linha)
 
-        '''chave_loc = f"loc{self.contador}"
-        chave_desc = f"desc{self.contador}"
-        chave_qtd = f"qtd{self.contador}"
-        chave_val = f"val{self.contador}"
+        '''
 
         dados[chave_loc] = entry_loc
         dados[chave_desc] = entry_desc
@@ -99,17 +96,24 @@ class PreencherPDFApp(QWidget):
         dados[chave_val] = entry_val
 
         # Atualizar dicionário posicoes
-        posicoes[chave_loc] = self.contador
-        posicoes[chave_desc] = self.contador
-        posicoes[chave_qtd] = self.contador
-        posicoes[chave_val] = self.contador'''
+        '''
 
         setattr(self, f'entry_loc{self.contador}', entry_loc)
         setattr(self, f'entry_desc{self.contador}', entry_desc)
         setattr(self, f'entry_qtd{self.contador}', entry_qtd)
         setattr(self, f'entry_val{self.contador}', entry_val)
 
+        y_base = 293
+        y_espaco = 30
+        y = y_base + (self.contador - 1) * y_espaco
+
+        atualizar_posicoes(f"loc{self.contador}", 65.15, y)
+        atualizar_posicoes(f"desc{self.contador}", 260.5, y)
+        atualizar_posicoes(f"qtd{self.contador}", 448.5, y)
+        atualizar_posicoes(f"val{self.contador}", 531, y)
+
         self.contador += 1
+
 
     def selecionar_pdf(self):
         file_dialog = QFileDialog()
