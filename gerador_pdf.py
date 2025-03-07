@@ -1,4 +1,5 @@
 import fitz
+posicoes = {}
 
 def centralizar_texto(x, y, texto,fonte="helv", fonte_size=11.5):
     if not texto:
@@ -28,6 +29,10 @@ def preencher_pdf(pdf_path, dados):
         "qtd3": (448.5, 353),
         "val3": (531, 353),
     }
+    posicoes = {}
+    def atualizar_posicoes(chave, contador):
+        posicoes[chave] = contador
+
     for chave, (x,y) in posicoes.items():
         x_centralizado, y_centralizado = centralizar_texto(x, y, dados[chave], fonte_size=11.5)
     # Adicionando texto em posições específicas

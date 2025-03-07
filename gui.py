@@ -1,104 +1,33 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
-from gerador_pdf import preencher_pdf
+from gerador_pdf import preencher_pdf, posicoes
+import sys
 pdf_padrao = "C:/Users/User/Documents/GitHub/marmoraria-rm-pdf-auto/orcamento-vazio.pdf"
+dados = {}
+
 class PreencherPDFApp(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
         self.pdf_path = pdf_padrao
-        self.posicoes = {}
-        self.contador =1
+        self.contador = 4
 
 
     def init_ui(self):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M")
         self.setGeometry(100, 280, 800, 200)
 
-        layout = QVBoxLayout()
+        self.layout = QVBoxLayout()
 
         self.label_pdf = QLabel("PDF padrão já selecionado")
-        layout.addWidget(self.label_pdf)
+        self.layout.addWidget(self.label_pdf)
 
         self.btn_selecionar = QPushButton("Selecionar outro PDF")
         self.btn_selecionar.clicked.connect(self.selecionar_pdf)
-        layout.addWidget(self.btn_selecionar)
-        """======================================
-        ---------------INICIO LINHA 1---------------
-        ======================================"""
-        Linha1 = QHBoxLayout()
-        self.entry_loc1 = QLineEdit()
-        self.entry_loc1.setPlaceholderText("LOCAL")
-        Linha1.addWidget(self.entry_loc1)
+        self.layout.addWidget(self.btn_selecionar)
 
-        self.entry_desc1 = QLineEdit()
-        self.entry_desc1.setPlaceholderText("DESCRIÇÃO")
-        Linha1.addWidget(self.entry_desc1)  
-
-        self.entry_qtd1 = QLineEdit()
-        self.entry_qtd1.setPlaceholderText("QUANTIDADE")
-        Linha1.addWidget(self.entry_qtd1)
-
-        self.entry_val1 = QLineEdit()
-        self.entry_val1.setPlaceholderText("VALOR")
-        Linha1.addWidget(self.entry_val1)
-
-        layout.addLayout(Linha1)
-        """======================================
-        ---------------FIM LINHA 1---------------
-        ======================================"""
-        """======================================
-        ---------------INICIO LINHA 2---------------
-        ======================================"""
-        Linha2 = QHBoxLayout()
-        
-        self.entry_loc2 = QLineEdit()
-        self.entry_loc2.setPlaceholderText("LOCAL")
-        Linha2.addWidget(self.entry_loc2)
-
-        self.entry_desc2 = QLineEdit()
-        self.entry_desc2.setPlaceholderText("DESCRIÇÃO")
-        Linha2.addWidget(self.entry_desc2)
-
-        self.entry_qtd2 = QLineEdit()
-        self.entry_qtd2.setPlaceholderText("QUANTIDADE")
-        Linha2.addWidget(self.entry_qtd2)
-
-        self.entry_val2 = QLineEdit()
-        self.entry_val2.setPlaceholderText("VALOR")
-        Linha2.addWidget(self.entry_val2)
-
-        layout.addLayout(Linha2)
-        """======================================
-        ---------------FIM LINHA 2---------------
-        ======================================"""
-        """======================================
-        ---------------INICIO LINHA 3---------------
-        ======================================"""
-        Linha3 = QHBoxLayout()
-        
-        self.entry_loc3 = QLineEdit()
-        self.entry_loc3.setPlaceholderText("LOCAL")
-        Linha3.addWidget(self.entry_loc3)
-
-        self.entry_desc3 = QLineEdit()
-        self.entry_desc3.setPlaceholderText("DESCRIÇÃO")
-        Linha3.addWidget(self.entry_desc3)
-
-        self.entry_qtd3 = QLineEdit()
-        self.entry_qtd3.setPlaceholderText("QUANTIDADE")
-        Linha3.addWidget(self.entry_qtd3)
-
-        self.entry_val3 = QLineEdit()
-        self.entry_val3.setPlaceholderText("VALOR")
-        Linha3.addWidget(self.entry_val3)
-
-        layout.addLayout(Linha3)
-        """======================================
-        ---------------FIM LINHA 3---------------
-        ======================================"""
-        self.contador = 1
-
-        self.novos_campos()
+        self.adicionar_linha_inicial(1)
+        self.adicionar_linha_inicial(2)
+        self.adicionar_linha_inicial(3)
 
         self.btn_nova_linha = QPushButton("ADICIONAR NOVA LINHA")
         self.btn_nova_linha.clicked.connect(self.novos_campos)
@@ -106,38 +35,80 @@ class PreencherPDFApp(QWidget):
 
         self.btn_preencher = QPushButton("Preencher PDF")
         self.btn_preencher.clicked.connect(self.enviar_dados)
-        layout.addWidget(self.btn_preencher)
+        self.layout.addWidget(self.btn_preencher)
 
         self.setLayout(self.layout)
 
-    def novos_campos(self):
-        Linha = QHBoxLayout()
+        """======================================
+        ---------------INICIO LINHA 1---------------
+        ======================================"""
+    def adicionar_linha_inicial(self, linha_num):
+        linha = QHBoxLayout()
         entry_loc = QLineEdit()
         entry_loc.setPlaceholderText("LOCAL")
-        Linha.addWidget(entry_loc)
+        linha.addWidget(entry_loc)
 
         entry_desc = QLineEdit()
         entry_desc.setPlaceholderText("DESCRIÇÃO")
-        Linha.addWidget(entry_desc)
+        linha.addWidget(entry_desc)
 
         entry_qtd = QLineEdit()
         entry_qtd.setPlaceholderText("QUANTIDADE")
-        Linha.addWidget(entry_qtd)
+        linha.addWidget(entry_qtd)
 
         entry_val = QLineEdit()
         entry_val.setPlaceholderText("VALOR")
-        Linha.addWidget(entry_val)
+        linha.addWidget(entry_val)
 
-        self.layout.addLayout(Linha)
+        self.layout.addLayout(linha)
 
-        chave = f"Linha{self.contador}"
-        self.dados[chave] = {
-            "local": entry_loc,
-            "descricao": entry_desc,
-            "quantidade": entry_qtd,
-            "valor": entry_val
-        }
-        self.posicoes[chave] = self.contador
+        # Dicionário JA COMEÇA com esses dados
+        setattr(self, f'entry_loc{linha_num}', entry_loc)
+        setattr(self, f'entry_desc{linha_num}', entry_desc)
+        setattr(self, f'entry_qtd{linha_num}', entry_qtd)
+        setattr(self, f'entry_val{linha_num}', entry_val)
+
+    def novos_campos(self):
+        linha = QHBoxLayout()
+        entry_loc = QLineEdit()
+        entry_loc.setPlaceholderText("LOCAL")
+        linha.addWidget(entry_loc)
+
+        entry_desc = QLineEdit()
+        entry_desc.setPlaceholderText("DESCRIÇÃO")
+        linha.addWidget(entry_desc)
+
+        entry_qtd = QLineEdit()
+        entry_qtd.setPlaceholderText("QUANTIDADE")
+        linha.addWidget(entry_qtd)
+
+        entry_val = QLineEdit()
+        entry_val.setPlaceholderText("VALOR")
+        linha.addWidget(entry_val)
+
+        self.layout.addLayout(linha)
+
+        '''chave_loc = f"loc{self.contador}"
+        chave_desc = f"desc{self.contador}"
+        chave_qtd = f"qtd{self.contador}"
+        chave_val = f"val{self.contador}"
+
+        dados[chave_loc] = entry_loc
+        dados[chave_desc] = entry_desc
+        dados[chave_qtd] = entry_qtd
+        dados[chave_val] = entry_val
+
+        # Atualizar dicionário posicoes
+        posicoes[chave_loc] = self.contador
+        posicoes[chave_desc] = self.contador
+        posicoes[chave_qtd] = self.contador
+        posicoes[chave_val] = self.contador'''
+
+        setattr(self, f'entry_loc{self.contador}', entry_loc)
+        setattr(self, f'entry_desc{self.contador}', entry_desc)
+        setattr(self, f'entry_qtd{self.contador}', entry_qtd)
+        setattr(self, f'entry_val{self.contador}', entry_val)
+
         self.contador += 1
 
     def selecionar_pdf(self):
@@ -153,24 +124,24 @@ class PreencherPDFApp(QWidget):
             return
 
         # Capturando os dados da interface
-        #Linha 1
-        dados = {
-            "loc1": self.entry_loc1.text() or " ",
-            "desc1": self.entry_desc1.text() or " ",
-            "qtd1": self.entry_qtd1.text() or " ",
-            "val1": self.entry_val1.text() or " ",
-            #-------------linha 2----------------        
-            "loc2": self.entry_loc2.text() or " ",
-            "desc2": self.entry_desc2.text() or " ",
-            "qtd2": self.entry_qtd2.text() or " ",
-            "val2": self.entry_val2.text() or " ",
-            #-------------linha 3----------------        
-            "loc3": self.entry_loc3.text() or " ",
-            "desc3": self.entry_desc3.text() or " ",
-            "qtd3": self.entry_qtd3.text() or " ",
-            "val3": self.entry_val3.text() or " "
-        }
 
+        dados = {}
+        for i in range(1, self.contador):
+            # Obter os valores dos atributos dinâmicos
+            try:
+                loc = getattr(self, f'entry_loc{i}').text() or " "
+                desc = getattr(self, f'entry_desc{i}').text() or " "
+                qtd = getattr(self, f'entry_qtd{i}').text() or " "
+                val = getattr(self, f'entry_val{i}').text() or " "
+            #Adicionar ao dicionário de dados
+                dados[f"loc{i}"] = loc
+                dados[f"desc{i}"] = desc
+                dados[f"qtd{i}"] = qtd
+                dados[f"val{i}"] = val
+            except AttributeError:
+        # Caso alguma linha não exista, ignore
+                QMessageBox.warning(self, "Erro", f"Erro ao acessar os campos da linha {i}. Verifique se os campos foram criados corretamente.")
+                return
         novo_pdf = preencher_pdf(self.pdf_path, dados)
 
         QMessageBox.information(self, "Sucesso", f"PDF salvo como: {novo_pdf}")
