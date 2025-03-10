@@ -1,49 +1,48 @@
 from PyQt6.QtWidgets import QHBoxLayout, QLineEdit, QFileDialog, QMessageBox
 from gerador_pdf import preencher_pdf, atualizar_posicoes
 
-def adicionar_linhas(self, linha_num=None):
-        linha = QHBoxLayout()
-        entry_loc = QLineEdit()
-        entry_loc.setPlaceholderText("LOCAL")
-        linha.addWidget(entry_loc)
+def adicionar_linhas(app, linha_num, y=None):
+    linha = QHBoxLayout()
+    entry_loc = QLineEdit()
+    entry_loc.setPlaceholderText("LOCAL")
+    linha.addWidget(entry_loc)
 
-        entry_desc = QLineEdit()
-        entry_desc.setPlaceholderText("DESCRIÇÃO")
-        linha.addWidget(entry_desc)
+    entry_desc = QLineEdit()
+    entry_desc.setPlaceholderText("DESCRIÇÃO")
+    linha.addWidget(entry_desc)
 
-        entry_qtd = QLineEdit()
-        entry_qtd.setPlaceholderText("QUANTIDADE")
-        linha.addWidget(entry_qtd)
+    entry_qtd = QLineEdit()
+    entry_qtd.setPlaceholderText("QUANTIDADE")
+    linha.addWidget(entry_qtd)
 
-        entry_val = QLineEdit()
-        entry_val.setPlaceholderText("VALOR")
-        linha.addWidget(entry_val)
+    entry_val = QLineEdit()
+    entry_val.setPlaceholderText("VALOR")
+    linha.addWidget(entry_val)
 
-        self.layout.addLayout(linha)
+    app.linhas_layout.addLayout(linha)
+    # Inicializa a lista caso não exista
+    app.linhas.append({
+        "loc": entry_loc,
+        "desc": entry_desc,
+        "qtd": entry_qtd,
+        "val": entry_val
+    })
 
-        # Inicializa a lista caso não exista
-        self.linhas.append({
-            "loc": entry_loc,
-            "desc": entry_desc,
-            "qtd": entry_qtd,
-            "val": entry_val
-        })
+    y_base = 293
+    y_espaco = 30
+    if y is None:
+        y = y_base + (linha_num - 1) * y_espaco
 
-        y_base = 293
-        y_espaco = 30
-        y = y_base + (linha_num - 1) * y_espaco if linha_num else y_base + (self.contador - 1) * y_espaco
-
-        campos = {
-            f"loc{linha_num}": 65.15,
-            f"desc{linha_num}": 260.5,
-            f"qtd{linha_num}": 445.5,
-            f"val{linha_num}": 531,
-        }
-
-        for chave, x in campos.items():
-            atualizar_posicoes(chave, x, y)
-
-        self.contador += 1
+    campos = {
+        f"loc{linha_num}": 65.15,
+        f"desc{linha_num}": 260.5,
+        f"qtd{linha_num}": 445.5,
+        f"val{linha_num}": 531,
+    }
+    
+    for chave, x in campos.items():
+        atualizar_posicoes(chave, x, y)
+        print(f"Atualizando {chave}: (x={x}, y={y})")
 
 def selecionar_pdf(self):
     file_dialog = QFileDialog()
@@ -57,14 +56,17 @@ def enviar_dados(self):
         QMessageBox.warning(self, "Erro", "Por favor, selecione um PDF primeiro.")
         return
 
-    # Obter os valores dos atributos dinâmicos
-
     dados = {}  # Garante que o dicionário começa vazio
     for i, linha in enumerate(self.linhas, start=1):  # Agora percorre as linhas corretamente
-        dados[f"loc{i}"] = linha["loc"].text() or " "
-        dados[f"desc{i}"] = linha["desc"].text() or " "
-        dados[f"qtd{i}"] = linha["qtd"].text() or " "
-        dados[f"val{i}"] = linha["val"].text() or " "
+        loc = linha["loc"].text() or " "
+        desc = linha["desc"].text() or " "
+        qtd = linha["qtd"].text() or " "
+        val = linha["val"].text() or " "
+
+        dados[f"loc{i}"] = loc
+        dados[f"desc{i}"] = desc
+        dados[f"qtd{i}"] = qtd
+        dados[f"val{i}"] = val
 
     print(dados)
     novo_pdf = preencher_pdf(self.pdf_path, dados)

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
-#from gerador_pdf import preencher_pdf, atualizar_posicoes, posicoes
 from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas
+
 import sys
 
 pdf_padrao = "C:/Users/User/Documents/GitHub/marmoraria-rm-pdf-auto/orcamento-vazio.pdf"
@@ -9,10 +9,15 @@ dados = {}
 class PreencherPDFApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.contador = 1
-        self.pdf_path = pdf_padrao
-        self.linhas = []
-        self.init_ui()
+        self.contador = 4 
+        self.pdf_path = pdf_padrao 
+        self.linhas = []  # Lista para guardar os campos dinâmicos
+
+        self.layout = QVBoxLayout()
+        self.linhas_layout = QVBoxLayout()# Layout específico para as linhas
+        self.layout.addLayout(self.linhas_layout)  
+
+        self.init_ui()  # Inicializa a interface
 
     def init_ui(self):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M")
@@ -27,12 +32,16 @@ class PreencherPDFApp(QWidget):
         self.btn_selecionar.clicked.connect(lambda: selecionar_pdf(self))
         self.layout.addWidget(self.btn_selecionar)
 
-        for i in range(1, 4):
-            adicionar_linhas(self, i)
-            #self.adicionar_linhas(i)
+        self.linhas_layout = QVBoxLayout()
+        self.layout.addLayout(self.linhas_layout)
+        #for i in range(1, 4):
+            #adicionar_linhas(self, i)
+        self.adicionar_linhas(1)
+        self.adicionar_linhas(2)
+        self.adicionar_linhas(3)
 
         self.btn_nova_linha = QPushButton("ADICIONAR NOVA LINHA")
-        self.btn_nova_linha.clicked.connect(lambda: adicionar_linhas(self, self.contador))
+        self.btn_nova_linha.clicked.connect(lambda: adicionar_linhas(self, len(self.linhas) + 1))
         self.layout.addWidget(self.btn_nova_linha)
 
         self.btn_preencher = QPushButton("Preencher PDF")
@@ -40,3 +49,9 @@ class PreencherPDFApp(QWidget):
         self.layout.addWidget(self.btn_preencher)
 
         self.setLayout(self.layout)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = PreencherPDFApp()
+    window.show()
+    sys.exit(app.exec())
