@@ -36,9 +36,9 @@ class PreencherPDFApp(QWidget):
         self.layout.addLayout(self.linhas_layout)
         #for i in range(1, 4):
             #adicionar_linhas(self, i)
-        self.adicionar_linhas(1)
-        self.adicionar_linhas(2)
-        self.adicionar_linhas(3)
+        adicionar_linhas(self, 1)
+        adicionar_linhas(self, 2)
+        adicionar_linhas(self, 3)
 
         self.btn_nova_linha = QPushButton("ADICIONAR NOVA LINHA")
         self.btn_nova_linha.clicked.connect(lambda: adicionar_linhas(self, len(self.linhas) + 1))
