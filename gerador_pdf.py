@@ -1,7 +1,7 @@
 import fitz
 posicoes = {}
 
-def centralizar_texto(x, y, texto,fonte="helv", fonte_size=11.5):
+def centralizar_texto(x, y, texto,fonte="helv", fonte_size=11):
     if not texto:
         texto = " "
     largura_texto = fitz.get_text_length(texto,fontname=fonte, fontsize=fonte_size)
@@ -19,9 +19,9 @@ def preencher_pdf(pdf_path, dados):
         for chave, (x, y) in posicoes.items():
             if chave in dados:  # Certificar-se de que a chave existe no dicionário de dados
                 texto = dados[chave]
-                x_centralizado, y_centralizado = centralizar_texto(x, y, texto, fonte_size=11.5)
+                x_centralizado, y_centralizado = centralizar_texto(x, y, texto, fonte_size=11)
                 # Inserir texto no PDF na posição calculada
-                page.insert_text((x_centralizado, y_centralizado), texto, fontsize=11.5, fontname="helv", color=(0, 0, 0))
+                page.insert_text((x_centralizado, y_centralizado), texto, fontsize=11, fontname="helv", color=(0, 0, 0))
     
     #novo caminho é variavel para mudar o nome do arqui, posso usar um label pra escolher o nome do cliente epor numa varialvel 'cliente' e por em 'novocaminho'
         novo_caminho = pdf_path.replace(".pdf", " Orçamento.pdf")

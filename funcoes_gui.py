@@ -5,18 +5,22 @@ def adicionar_linhas(app, linha_num, y=None):
     linha = QHBoxLayout()
     entry_loc = QLineEdit()
     entry_loc.setPlaceholderText("LOCAL")
+    entry_loc.setMaxLength(10)
     linha.addWidget(entry_loc)
 
     entry_desc = QLineEdit()
     entry_desc.setPlaceholderText("DESCRIÇÃO")
+    entry_loc.setMaxLength(30)
     linha.addWidget(entry_desc)
 
     entry_qtd = QLineEdit()
     entry_qtd.setPlaceholderText("QUANTIDADE")
+    entry_loc.setMaxLength(6)
     linha.addWidget(entry_qtd)
 
     entry_val = QLineEdit()
     entry_val.setPlaceholderText("VALOR")
+    entry_loc.setMaxLength(11)
     linha.addWidget(entry_val)
 
     app.linhas_layout.addLayout(linha)
