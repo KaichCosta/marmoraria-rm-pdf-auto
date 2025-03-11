@@ -34,8 +34,7 @@ class PreencherPDFApp(QWidget):
 
         self.linhas_layout = QVBoxLayout()
         self.layout.addLayout(self.linhas_layout)
-        #for i in range(1, 4):
-            #adicionar_linhas(self, i)
+
         adicionar_linhas(self, 1)
         adicionar_linhas(self, 2)
         adicionar_linhas(self, 3)

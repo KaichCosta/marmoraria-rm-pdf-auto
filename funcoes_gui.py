@@ -1,26 +1,51 @@
 from PyQt6.QtWidgets import QHBoxLayout, QLineEdit, QFileDialog, QMessageBox
 from gerador_pdf import preencher_pdf, atualizar_posicoes
 
+def limitar_texto(entry, limite):
+    #Impede que o usuário digite mais caracteres do que o limite
+    texto = entry.text()
+    if len(texto) > limite:
+        entry.setText(texto[:limite])
+
+def dividir_texto(texto, limite):
+    palavras = texto.split()
+    linhas = []
+    linha_atual = ""
+
+    for palavra in palavras:
+        if len(linha_atual) + len(palavra) + 1 <= limite:
+            linha_atual += " " + palavra if linha_atual else palavra
+        else:
+            linhas.append(linha_atual)
+            linha_atual = palavra
+
+    if linha_atual:
+        linhas.append(linha_atual)
+    return linhas   
 def adicionar_linhas(app, linha_num, y=None):
     linha = QHBoxLayout()
     entry_loc = QLineEdit()
     entry_loc.setPlaceholderText("LOCAL")
-    entry_loc.setMaxLength(10)
+    entry_loc.setMaxLength(12)
+    entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, 12))
     linha.addWidget(entry_loc)
 
     entry_desc = QLineEdit()
     entry_desc.setPlaceholderText("DESCRIÇÃO")
-    entry_loc.setMaxLength(30)
+    #entry_desc.setMaxLength(34)
+    #entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, 34))
     linha.addWidget(entry_desc)
 
     entry_qtd = QLineEdit()
     entry_qtd.setPlaceholderText("QUANTIDADE")
-    entry_loc.setMaxLength(6)
+    entry_qtd.setMaxLength(6)
+    entry_qtd.textChanged.connect(lambda: limitar_texto(entry_qtd, 6))    
     linha.addWidget(entry_qtd)
 
     entry_val = QLineEdit()
     entry_val.setPlaceholderText("VALOR")
-    entry_loc.setMaxLength(11)
+    entry_val.setMaxLength(10)
+    entry_val.textChanged.connect(lambda: limitar_texto(entry_val, 10))
     linha.addWidget(entry_val)
 
     app.linhas_layout.addLayout(linha)
@@ -39,7 +64,7 @@ def adicionar_linhas(app, linha_num, y=None):
 
     campos = {
         f"loc{linha_num}": 65.15,
-        f"desc{linha_num}": 260.5,
+        f"desc{linha_num}": 261,
         f"qtd{linha_num}": 445.5,
         f"val{linha_num}": 531,
     }
@@ -68,7 +93,17 @@ def enviar_dados(self):
         val = linha["val"].text() or " "
 
         dados[f"loc{i}"] = loc
-        dados[f"desc{i}"] = desc
+
+        linhas_desc = dividir_texto(desc, 34)  # Divide a descrição em partes de até 30 caracteres
+        y_atual = 293 + (i - 1) * 34  # Guarda a posição inicial Y
+        desc_index = i  # Novo contador para as linhas da descrição
+
+        for linha in linhas_desc:
+            dados[f"desc{i}"] = linha
+            atualizar_posicoes(f"desc{i}", 260.5, y_atual)
+            y_atual += 12  # Move para a próxima linha
+            desc_index += 1  # Incrementa o índice para a próxima linha
+
         dados[f"qtd{i}"] = qtd
         dados[f"val{i}"] = val
 
