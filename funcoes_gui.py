@@ -77,15 +77,32 @@ def enviar_dados(self):
         return
 
     dados = {}  # Garante que o dicionário começa vazio
+
     for i, linha in enumerate(self.linhas, start=1):  # Agora percorre as linhas corretamente
         loc = linha["loc"].text() or " "
         desc = linha["desc"].text() or " "
         qtd = linha["qtd"].text() or " "
         val = linha["val"].text() or " "
 
-        dados[f"loc{i}"] = loc
+        #Dividir em 2 linhas o conteúdo
+        linhas_loc = dividir_texto_centralizando(loc, 15)  # Divide a descrição em partes de até 34 caracteres
+        y_base = 293
+        y_espaco = 30  # Espaço entre cada item na tabela
+        y_centro = y_base + (i - 1) * y_espaco  # Define a posição central de cada item
 
-        linhas_desc = dividir_texto_centralizando(desc, 47)  # Divide a descrição em partes de até 34 caracteres
+        if len(linhas_loc) == 1:
+            y_linha1 = y_centro  # Mantém no centro do retângulo
+            atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
+            dados[f"desc{i}_1"] = linhas_loc[0]
+        else:
+            y_linha1 = y_centro - 6  # Primeira linha sobe um pouco
+            y_linha2 = y_centro + 6  # Segunda linha desce um pouco
+            atualizar_posicoes(f"desc{i}_1", 60.967, y_linha1)
+            atualizar_posicoes(f"desc{i}_2", 60.967, y_linha2)
+            dados[f"desc{i}_1"] = linhas_loc[0]
+            dados[f"desc{i}_2"] = linhas_loc[1]
+
+        linhas_desc = dividir_texto_centralizando(desc, 45)  # Divide a descrição em partes de até 34 caracteres
         y_base = 293
         y_espaco = 30  # Espaço entre cada item na tabela
         y_centro = y_base + (i - 1) * y_espaco  # Define a posição central de cada item
@@ -101,6 +118,7 @@ def enviar_dados(self):
             atualizar_posicoes(f"desc{i}_2", 275.8064, y_linha2)
             dados[f"desc{i}_1"] = linhas_desc[0]
             dados[f"desc{i}_2"] = linhas_desc[1]
+
         #Ajusta a posição das colunas de quantidade e valor
         atualizar_posicoes(f"qtd{i}", 473.535, y_centro)
         atualizar_posicoes(f"val{i}", 542.55, y_centro)
