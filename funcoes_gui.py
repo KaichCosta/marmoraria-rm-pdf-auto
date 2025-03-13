@@ -7,21 +7,12 @@ def limitar_texto(entry, limite):
     if len(texto) > limite:
         entry.setText(texto[:limite])
 
-def dividir_texto(texto, limite):
-    palavras = texto.split()
-    linhas = []
-    linha_atual = ""
+def dividir_texto_centralizando(texto, limite=34):
+    if len(texto) <= limite:
+        return [texto]
+    linhas = [texto[:limite], texto[limite:2*limite].strip()]
+    return linhas
 
-    for palavra in palavras:
-        if len(linha_atual) + len(palavra) + 1 <= limite:
-            linha_atual += " " + palavra if linha_atual else palavra
-        else:
-            linhas.append(linha_atual)
-            linha_atual = palavra
-
-    if linha_atual:
-        linhas.append(linha_atual)
-    return linhas   
 def adicionar_linhas(app, linha_num, y=None):
     linha = QHBoxLayout()
     entry_loc = QLineEdit()
@@ -32,8 +23,8 @@ def adicionar_linhas(app, linha_num, y=None):
 
     entry_desc = QLineEdit()
     entry_desc.setPlaceholderText("DESCRIÇÃO")
-    #entry_desc.setMaxLength(34)
-    #entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, 34))
+    entry_desc.setMaxLength(96)
+    entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, 96))
     linha.addWidget(entry_desc)
 
     entry_qtd = QLineEdit()
@@ -63,10 +54,10 @@ def adicionar_linhas(app, linha_num, y=None):
         y = y_base + (linha_num - 1) * y_espaco
 
     campos = {
-        f"loc{linha_num}": 65.15,
-        f"desc{linha_num}": 261,
-        f"qtd{linha_num}": 445.5,
-        f"val{linha_num}": 531,
+        f"loc{linha_num}": 60.967,#65.15
+        f"desc{linha_num}": 275.8064,#
+        f"qtd{linha_num}": 473.535,#445.5
+        f"val{linha_num}": 542.55,#531
     }
     
     for chave, x in campos.items():
@@ -94,16 +85,25 @@ def enviar_dados(self):
 
         dados[f"loc{i}"] = loc
 
-        linhas_desc = dividir_texto(desc, 34)  # Divide a descrição em partes de até 30 caracteres
-        y_atual = 293 + (i - 1) * 34  # Guarda a posição inicial Y
-        desc_index = i  # Novo contador para as linhas da descrição
+        linhas_desc = dividir_texto_centralizando(desc, 47)  # Divide a descrição em partes de até 34 caracteres
+        y_base = 293
+        y_espaco = 30  # Espaço entre cada item na tabela
+        y_centro = y_base + (i - 1) * y_espaco  # Define a posição central de cada item
 
-        for linha in linhas_desc:
-            dados[f"desc{i}"] = linha
-            atualizar_posicoes(f"desc{i}", 260.5, y_atual)
-            y_atual += 12  # Move para a próxima linha
-            desc_index += 1  # Incrementa o índice para a próxima linha
-
+        if len(linhas_desc) == 1:
+            y_linha1 = y_centro  # Mantém no centro do retângulo
+            atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
+            dados[f"desc{i}_1"] = linhas_desc[0]
+        else:
+            y_linha1 = y_centro - 6  # Primeira linha sobe um pouco
+            y_linha2 = y_centro + 6  # Segunda linha desce um pouco
+            atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
+            atualizar_posicoes(f"desc{i}_2", 275.8064, y_linha2)
+            dados[f"desc{i}_1"] = linhas_desc[0]
+            dados[f"desc{i}_2"] = linhas_desc[1]
+        #Ajusta a posição das colunas de quantidade e valor
+        atualizar_posicoes(f"qtd{i}", 473.535, y_centro)
+        atualizar_posicoes(f"val{i}", 542.55, y_centro)
         dados[f"qtd{i}"] = qtd
         dados[f"val{i}"] = val
 
