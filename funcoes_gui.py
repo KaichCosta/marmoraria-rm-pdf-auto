@@ -17,8 +17,8 @@ def adicionar_linhas(app, linha_num, y=None):
     linha = QHBoxLayout()
     entry_loc = QLineEdit()
     entry_loc.setPlaceholderText("LOCAL")
-    entry_loc.setMaxLength(12)
-    entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, 12))
+    entry_loc.setMaxLength(24)
+    entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, 24))
     linha.addWidget(entry_loc)
 
     entry_desc = QLineEdit()
@@ -85,27 +85,25 @@ def enviar_dados(self):
         val = linha["val"].text() or " "
 
         #Dividir em 2 linhas o conteúdo
-        linhas_loc = dividir_texto_centralizando(loc, 15)  # Divide a descrição em partes de até 34 caracteres
         y_base = 293
         y_espaco = 30  # Espaço entre cada item na tabela
         y_centro = y_base + (i - 1) * y_espaco  # Define a posição central de cada item
+
+        linhas_loc = dividir_texto_centralizando(loc, 12)  # Divide os caracteres de local em partes de até 15 caracteres)
 
         if len(linhas_loc) == 1:
             y_linha1 = y_centro  # Mantém no centro do retângulo
             atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
-            dados[f"desc{i}_1"] = linhas_loc[0]
+            dados[f"loc{i}_1"] = linhas_loc[0]
         else:
             y_linha1 = y_centro - 6  # Primeira linha sobe um pouco
             y_linha2 = y_centro + 6  # Segunda linha desce um pouco
-            atualizar_posicoes(f"desc{i}_1", 60.967, y_linha1)
-            atualizar_posicoes(f"desc{i}_2", 60.967, y_linha2)
-            dados[f"desc{i}_1"] = linhas_loc[0]
-            dados[f"desc{i}_2"] = linhas_loc[1]
+            atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
+            atualizar_posicoes(f"loc{i}_2", 60.967, y_linha2)
+            dados[f"loc{i}_1"] = linhas_loc[0]
+            dados[f"loc{i}_2"] = linhas_loc[1]
 
         linhas_desc = dividir_texto_centralizando(desc, 45)  # Divide a descrição em partes de até 34 caracteres
-        y_base = 293
-        y_espaco = 30  # Espaço entre cada item na tabela
-        y_centro = y_base + (i - 1) * y_espaco  # Define a posição central de cada item
 
         if len(linhas_desc) == 1:
             y_linha1 = y_centro  # Mantém no centro do retângulo
