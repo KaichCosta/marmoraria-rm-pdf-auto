@@ -1,0 +1,49 @@
+/* Estilo para a Janela */
+QWidget {
+    background-color: #d9d9d9;  /* Cinza claro */
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+}
+
+/* Texto do titulo (Label) */
+#titulo {
+
+    text-align: center;
+    font-size: 25pt;
+    padding: 3px;
+    background-color: red;
+}
+
+/* Caixa de Entrada (LineEdit) */
+QLineEdit {
+    background-color: #ffffff;
+    border: 2px solidrgb(75, 75, 75);
+    border-radius: 5px;
+    padding: 5px;
+    selection-background-color: #009688; /* Destacar texto selecionado */
+}
+
+QLineEdit:focus {
+    border: 2px solid #007acc; /* Azul quando focado */
+}
+
+/* Botões (PushButton) */
+QPushButton {
+    background-color: #007acc;
+    color: white;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+QPushButton:hover {
+    background-color: #005fa3; /* Azul mais escuro ao passar o mouse */
+}
+
+QPushButton:pressed {
+    background-color: #003d73;
+}
+
+/* Mensagens Pop-up (MessageBox) */
+QMessageBox {
+    background-color: #ffffff;
+}

@@ -13,6 +13,10 @@ class PreencherPDFApp(QWidget):
         self.pdf_path = pdf_padrao 
         self.linhas = []  # Lista para guardar os campos dinâmicos
 
+        # Carregar o arquivo de estilos (QSS)
+        with open("style.qss", "r") as f:
+            self.setStyleSheet(f.read())
+
         self.layout = QVBoxLayout()
         self.linhas_layout = QVBoxLayout()# Layout específico para as linhas
         self.layout.addLayout(self.linhas_layout)  
@@ -22,9 +26,14 @@ class PreencherPDFApp(QWidget):
     def init_ui(self):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M")
         self.setWindowIcon(QIcon("pdficon.png"))
-        self.setGeometry(100, 280, 800, 200)
+        self.setGeometry(10, 280, 1000, 200)
 
         self.layout = QVBoxLayout()
+
+        self.label_titulo = QLabel("Orçamento")
+        self.layout.addWidget(self.label_titulo, alignment=1)
+        self.label_titulo.setObjectName("titulo")
+        self.layout.addWidget(self.label_titulo)
 
         self.label_pdf = QLabel("PDF padrão já selecionado")
         self.layout.addWidget(self.label_pdf)
