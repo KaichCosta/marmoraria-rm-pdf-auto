@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QApplication, QWidget, QSizePolicy, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
 from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas
 from PyQt6.QtGui import QIcon
 import sys
@@ -31,11 +31,14 @@ class PreencherPDFApp(QWidget):
         self.layout = QVBoxLayout()
 
         self.label_titulo = QLabel("Orçamento")
-        self.layout.addWidget(self.label_titulo, alignment=1)
+        self.layout.addWidget(self.label_titulo)
         self.label_titulo.setObjectName("titulo")
         self.layout.addWidget(self.label_titulo)
 
         self.label_pdf = QLabel("PDF padrão já selecionado")
+        self.label_pdf.setObjectName("pdfinfo")
+        self.label_pdf.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        self.label_pdf.adjustSize()
         self.layout.addWidget(self.label_pdf)
 
         self.btn_selecionar = QPushButton("Selecionar outro PDF")

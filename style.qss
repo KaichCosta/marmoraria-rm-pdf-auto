@@ -7,11 +7,17 @@ QWidget {
 
 /* Texto do titulo (Label) */
 #titulo {
-
-    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-family: Verdana;
     font-size: 25pt;
-    padding: 3px;
-    background-color: red;
+    color: red;
+}
+
+#pdfinfo {
+    qproperty-alignment: AlignCenter;
+    background-color: white;
+    padding: 2px;
+    font-size: 8pt;
 }
 
 /* Caixa de Entrada (LineEdit) */
