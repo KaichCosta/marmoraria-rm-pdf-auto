@@ -15,6 +15,7 @@ def dividir_texto_centralizando(texto, limite=34):
 
 def adicionar_linhas(app, linha_num, y=None):
     linha = QHBoxLayout()
+    
     entry_loc = QLineEdit()
     entry_loc.setPlaceholderText("LOCAL")
     entry_loc.setMaxLength(24)
@@ -39,8 +40,9 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_val.textChanged.connect(lambda: limitar_texto(entry_val, 10))
     linha.addWidget(entry_val)
 
-    app.linhas_layout.addLayout(linha)
-    # Inicializa a lista caso não exista
+    app.linhas_layout.addLayout(linha, app.contador, 0, 1, 8)
+    app.contador += 1    # Contador de linhas para o grid
+
     app.linhas.append({
         "loc": entry_loc,
         "desc": entry_desc,
