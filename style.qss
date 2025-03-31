@@ -9,7 +9,7 @@ QWidget {
 #titulo {
     qproperty-alignment: AlignCenter;
     font-family: Verdana;
-    font-size: 25pt;
+    font-size: 48pt;
     color: red;
 }
 

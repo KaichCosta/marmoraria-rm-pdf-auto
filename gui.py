@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QRadioButton, QVBoxLayout, QGridLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
 from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QPixmap
 import sys
 
 pdf_padrao = "C:/Users/User/Documents/GitHub/marmoraria-rm-pdf-auto/orcamento-vazio.pdf"
@@ -30,6 +30,12 @@ class PreencherPDFApp(QWidget):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M")
         self.setWindowIcon(QIcon("pdficon.png"))
         self.setGeometry(10, 280, 1000, 200)
+
+        self.logo = QLabel(self)
+        self.logo.setPixmap(QPixmap("logo.png"))  # Carregar imagem
+        self.logo.setScaledContents(True)  # Permite ajuste automático do tamanho
+        self.logo.resize(150, 100)  # Define o tamanho (largura x altura)
+        self.logo.move(800, 20)  # Posiciona no eixo X=800 e Y=20
 
         self.label_titulo = QLabel("Orçamento")
         self.label_titulo.setObjectName("titulo")
