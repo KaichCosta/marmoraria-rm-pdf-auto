@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QHBoxLayout, QLineEdit, QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QLineEdit, QFileDialog, QMessageBox
 from gerador_pdf import preencher_pdf, atualizar_posicoes
 
 def limitar_texto(entry, limite):
@@ -14,34 +14,33 @@ def dividir_texto_centralizando(texto, limite=34):
     return linhas
 
 def adicionar_linhas(app, linha_num, y=None):
-    linha = QHBoxLayout()
-    
     entry_loc = QLineEdit()
     entry_loc.setPlaceholderText("LOCAL")
     entry_loc.setMaxLength(24)
     entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, 24))
-    linha.addWidget(entry_loc)
 
     entry_desc = QLineEdit()
     entry_desc.setPlaceholderText("DESCRIÇÃO")
     entry_desc.setMaxLength(96)
     entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, 96))
-    linha.addWidget(entry_desc)
 
     entry_qtd = QLineEdit()
     entry_qtd.setPlaceholderText("QUANTIDADE")
     entry_qtd.setMaxLength(6)
     entry_qtd.textChanged.connect(lambda: limitar_texto(entry_qtd, 6))    
-    linha.addWidget(entry_qtd)
 
     entry_val = QLineEdit()
     entry_val.setPlaceholderText("VALOR")
     entry_val.setMaxLength(10)
     entry_val.textChanged.connect(lambda: limitar_texto(entry_val, 10))
-    linha.addWidget(entry_val)
 
-    app.linhas_layout.addLayout(linha, app.contador, 0, 1, 8)
-    app.contador += 1    # Contador de linhas para o grid
+    app.linhas_layout.addWidget(entry_loc, linha_num, 0)
+    app.linhas_layout.addWidget(entry_desc, linha_num, 1)
+    app.linhas_layout.addWidget(entry_qtd, linha_num, 2)
+    app.linhas_layout.addWidget(entry_val, linha_num, 3)
+
+    #app.linhas_layout.addLayout(linha, app.contador, 0, 1, 8)
+    #app.contador += 1    # Contador de linhas para o grid
 
     app.linhas.append({
         "loc": entry_loc,

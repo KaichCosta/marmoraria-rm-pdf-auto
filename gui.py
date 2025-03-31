@@ -17,15 +17,12 @@ class PreencherPDFApp(QWidget):
         with open("style.qss", "r") as f:
             self.setStyleSheet(f.read())
 
-        self.layout = QVBoxLayout()
+        self.layout = QGridLayout()
         self.setLayout(self.layout)
-
-        self.grid_layout = QGridLayout()
-        self.layout.addLayout(self.grid_layout)
 
         # Grid separado para as linhas dinâmicas
         self.linhas_layout = QGridLayout()
-        self.layout.addLayout(self.linhas_layout)
+        self.layout.addLayout(self.linhas_layout, 1, 0, 1, 8)
 
         self.init_ui()  # Inicializa a interface
 
@@ -36,45 +33,45 @@ class PreencherPDFApp(QWidget):
 
         self.label_titulo = QLabel("Orçamento")
         self.label_titulo.setObjectName("titulo")
-        self.grid_layout.addWidget(self.label_titulo, 0, 0, 1, 4)
+        self.layout.addWidget(self.label_titulo, 0, 0, 1, 4)
 
         self.btn_selecionar = QPushButton("Selecionar outro PDF")
         self.btn_selecionar.clicked.connect(lambda: selecionar_pdf(self))
-        self.grid_layout.addWidget(self.btn_selecionar, 0, 4)
+        self.layout.addWidget(self.btn_selecionar, 0, 4)
 
-        adicionar_linhas(self, 1, self.linhas_layout)
-        adicionar_linhas(self, 2, self.linhas_layout)
-        adicionar_linhas(self, 3, self.linhas_layout)
+        adicionar_linhas(self, 1)
+        adicionar_linhas(self, 2)
+        adicionar_linhas(self, 3)
 
         self.btn_nova_linha = QPushButton("ADICIONAR NOVA LINHA")
-        self.btn_nova_linha.clicked.connect(lambda: adicionar_linhas(self, len(self.linhas) + 1, self.linhas_layout))
-        self.layout.addWidget(self.btn_nova_linha)  # Botão fora da grade
+        self.btn_nova_linha.clicked.connect(lambda: adicionar_linhas(self, len(self.linhas) + 1))
+        self.layout.addWidget(self.btn_nova_linha, 2, 0, 1, 8) # Botão fora da grade
 
         # Total a prazo
         self.label_total_prazo = QLabel("TOTAL A PRAZO")
-        self.grid_layout.addWidget(self.label_total_prazo, 3, 1)
+        self.layout.addWidget(self.label_total_prazo, 3, 1)
         self.input_total_prazo = QLineEdit()
-        self.grid_layout.addWidget(self.input_total_prazo, 3, 2)
+        self.layout.addWidget(self.input_total_prazo, 3, 2)
 
         # Desconto
         self.label_desconto = QLabel("DESCONTO")
-        self.grid_layout.addWidget(self.label_desconto, 3, 3)
+        self.layout.addWidget(self.label_desconto, 3, 3)
         self.radio_5 = QRadioButton("5%")
         self.radio_7 = QRadioButton("7%")
-        self.grid_layout.addWidget(self.radio_5, 3, 4)
-        self.grid_layout.addWidget(self.radio_7, 3, 5)
+        self.layout.addWidget(self.radio_5, 3, 4)
+        self.layout.addWidget(self.radio_7, 3, 5)
 
         # Total à vista
         self.label_total_vista = QLabel("TOTAL A VISTA")
-        self.grid_layout.addWidget(self.label_total_vista, 3, 6)
+        self.layout.addWidget(self.label_total_vista, 3, 6)
         self.input_total_vista = QLineEdit()
-        self.grid_layout.addWidget(self.input_total_vista, 3, 7)
+        self.layout.addWidget(self.input_total_vista, 3, 7)
 
         # Observações
         self.label_obs = QLabel("OBSERVAÇÕES")
-        self.grid_layout.addWidget(self.label_obs, 4, 0, 1, 2)
+        self.layout.addWidget(self.label_obs, 4, 0, 1, 2)
         self.input_obs = QLineEdit()
-        self.grid_layout.addWidget(self.input_obs, 5, 0, 1, 8)
+        self.layout.addWidget(self.input_obs, 5, 0, 1, 8)
 
         # Botão Ir para próxima página
         self.btn_proxima_pagina = QPushButton("IR PARA PRÓXIMA PÁGINA")
