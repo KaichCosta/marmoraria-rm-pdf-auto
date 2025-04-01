@@ -32,10 +32,10 @@ class PreencherPDFApp(QWidget):
         self.setGeometry(10, 280, 1000, 200)
 
         self.logo = QLabel(self)
-        self.logo.setPixmap(QPixmap("logo.png"))  # Carregar imagem
+        self.logo.setPixmap(QPixmap("logo-marmoraria.png"))  # Carregar imagem
         self.logo.setScaledContents(True)  # Permite ajuste automático do tamanho
         self.logo.resize(150, 100)  # Define o tamanho (largura x altura)
-        self.logo.move(800, 20)  # Posiciona no eixo X=800 e Y=20
+        self.logo.move(750, 0)  # Posiciona no eixo
 
         self.label_titulo = QLabel("Orçamento")
         self.label_titulo.setObjectName("titulo")

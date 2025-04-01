@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QVBoxLayout, QLineEdit, QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QSizePolicy, QLineEdit, QFileDialog, QMessageBox
 from gerador_pdf import preencher_pdf, atualizar_posicoes
 
 def limitar_texto(entry, limite):
@@ -17,30 +17,41 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_loc = QLineEdit()
     entry_loc.setPlaceholderText("LOCAL")
     entry_loc.setMaxLength(24)
+    entry_loc.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)  
+    entry_loc.setMinimumWidth(90)  # Largura mínima
+    entry_loc.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)  
+    entry_loc.setFixedWidth(150)  # Valor sempre com largura fixa
     entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, 24))
 
     entry_desc = QLineEdit()
     entry_desc.setPlaceholderText("DESCRIÇÃO")
     entry_desc.setMaxLength(96)
+    entry_desc.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)  
+    entry_desc.setMinimumWidth(150)  # Largura mínima
+    entry_desc.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)  
+    entry_desc.setFixedWidth(300)  # Valor sempre com largura fixa
     entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, 96))
 
     entry_qtd = QLineEdit()
     entry_qtd.setPlaceholderText("QUANTIDADE")
     entry_qtd.setMaxLength(6)
+    entry_qtd.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)  
+    entry_qtd.setMinimumWidth(50)  # Largura mínima
+    entry_qtd.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)  
+    entry_qtd.setFixedWidth(75)  # Valor sempre com largura fixa
     entry_qtd.textChanged.connect(lambda: limitar_texto(entry_qtd, 6))    
 
     entry_val = QLineEdit()
     entry_val.setPlaceholderText("VALOR")
     entry_val.setMaxLength(10)
+    entry_val.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)  
+    entry_val.setFixedWidth(125)  # Valor sempre com largura fixa
     entry_val.textChanged.connect(lambda: limitar_texto(entry_val, 10))
 
     app.linhas_layout.addWidget(entry_loc, linha_num, 0)
     app.linhas_layout.addWidget(entry_desc, linha_num, 1)
     app.linhas_layout.addWidget(entry_qtd, linha_num, 2)
     app.linhas_layout.addWidget(entry_val, linha_num, 3)
-
-    #app.linhas_layout.addLayout(linha, app.contador, 0, 1, 8)
-    #app.contador += 1    # Contador de linhas para o grid
 
     app.linhas.append({
         "loc": entry_loc,

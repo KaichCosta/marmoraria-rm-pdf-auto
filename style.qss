@@ -1,6 +1,6 @@
 /* Estilo para a Janela */
 QWidget {
-    background-color: #d9d9d9;  /* Cinza claro */
+    background-color: #e5e5e5;  /* Cinza claro */
     font-family: Arial, sans-serif;
     font-size: 12pt;
 }
@@ -11,6 +11,7 @@ QWidget {
     font-family: Verdana;
     font-size: 48pt;
     color: red;
+    background-color: blue;
 }
 
 #pdfinfo {
