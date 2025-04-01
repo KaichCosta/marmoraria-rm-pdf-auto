@@ -9,9 +9,8 @@ QWidget {
 #titulo {
     qproperty-alignment: AlignCenter;
     font-family: Verdana;
-    font-size: 48pt;
+    font-size: 38pt;
     color: red;
-    background-color: blue;
 }
 
 #pdfinfo {
@@ -24,14 +23,35 @@ QWidget {
 /* Caixa de Entrada (LineEdit) */
 QLineEdit {
     background-color: #ffffff;
-    border: 2px solidrgb(75, 75, 75);
+    border: 2px solid rgb(75, 75, 75);
     border-radius: 5px;
     padding: 5px;
+    margin: 0px;
     selection-background-color: #009688; /* Destacar texto selecionado */
 }
 
 QLineEdit:focus {
     border: 2px solid #007acc; /* Azul quando focado */
+}
+
+QLineEdit#entry_loc {
+    min-width: 90px;
+    max-width: 155px;
+}
+
+QLineEdit#entry_desc {
+    min-width: 150px;
+    max-width: 330px;
+}
+
+QLineEdit#entry_qtd {
+    min-width: 50px;
+    max-width: 105px;
+}
+
+QLineEdit#entry_val {
+    min-width: 40px;
+    max-width: 93px;
 }
 
 /* Botões (PushButton) */

@@ -22,6 +22,9 @@ class PreencherPDFApp(QWidget):
 
         # Grid separado para as linhas dinâmicas
         self.linhas_layout = QGridLayout()
+        self.linhas_layout.setVerticalSpacing(5)  # Remove espaçamento vertical entre linhas
+        self.linhas_layout.setHorizontalSpacing(0)  # Pequeno espaçamento horizontal
+        self.linhas_layout.setContentsMargins(0, 0, 0, 0)  # Remove margens extras
         self.layout.addLayout(self.linhas_layout, 1, 0, 1, 8)
 
         self.init_ui()  # Inicializa a interface
@@ -29,21 +32,26 @@ class PreencherPDFApp(QWidget):
     def init_ui(self):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M")
         self.setWindowIcon(QIcon("pdficon.png"))
-        self.setGeometry(10, 280, 1000, 200)
+        self.setGeometry(10, 880, 850, 200)
 
         self.logo = QLabel(self)
         self.logo.setPixmap(QPixmap("logo-marmoraria.png"))  # Carregar imagem
         self.logo.setScaledContents(True)  # Permite ajuste automático do tamanho
         self.logo.resize(150, 100)  # Define o tamanho (largura x altura)
-        self.logo.move(750, 0)  # Posiciona no eixo
+        self.logo.move(680, 0)  # Posiciona no eixo
 
         self.label_titulo = QLabel("Orçamento")
         self.label_titulo.setObjectName("titulo")
-        self.layout.addWidget(self.label_titulo, 0, 0, 1, 4)
+        self.layout.addWidget(self.label_titulo, 0, 0, 1, 3)
 
         self.btn_selecionar = QPushButton("Selecionar outro PDF")
         self.btn_selecionar.clicked.connect(lambda: selecionar_pdf(self))
-        self.layout.addWidget(self.btn_selecionar, 0, 4)
+        self.layout.addWidget(self.btn_selecionar, 0, 3, 1, 3)
+
+        self.linhas_layout.setColumnStretch(0, 1)  # LOCAL menor
+        self.linhas_layout.setColumnStretch(1, 3)  # DESCRIÇÃO maior
+        self.linhas_layout.setColumnStretch(2, 1)  # QUANTIDADE menor
+        self.linhas_layout.setColumnStretch(3, 1)  # VALOR menor
 
         adicionar_linhas(self, 1)
         adicionar_linhas(self, 2)

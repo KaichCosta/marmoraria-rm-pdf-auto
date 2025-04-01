@@ -14,45 +14,45 @@ def dividir_texto_centralizando(texto, limite=34):
     return linhas
 
 def adicionar_linhas(app, linha_num, y=None):
+
     entry_loc = QLineEdit()
     entry_loc.setPlaceholderText("LOCAL")
+    entry_loc.setObjectName("entry_loc")
+    entry_loc.setMaximumWidth(125)
     entry_loc.setMaxLength(24)
-    entry_loc.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)  
-    entry_loc.setMinimumWidth(90)  # Largura mínima
-    entry_loc.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)  
-    entry_loc.setFixedWidth(150)  # Valor sempre com largura fixa
     entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, 24))
 
     entry_desc = QLineEdit()
     entry_desc.setPlaceholderText("DESCRIÇÃO")
+    entry_desc.setObjectName("entry_desc")
+    entry_desc.setMaximumWidth(300)
     entry_desc.setMaxLength(96)
-    entry_desc.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)  
-    entry_desc.setMinimumWidth(150)  # Largura mínima
-    entry_desc.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)  
-    entry_desc.setFixedWidth(300)  # Valor sempre com largura fixa
     entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, 96))
 
     entry_qtd = QLineEdit()
     entry_qtd.setPlaceholderText("QUANTIDADE")
+    entry_qtd.setObjectName("entry_qtd")
+    entry_qtd.setMaximumWidth(75)
     entry_qtd.setMaxLength(6)
-    entry_qtd.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)  
-    entry_qtd.setMinimumWidth(50)  # Largura mínima
-    entry_qtd.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)  
-    entry_qtd.setFixedWidth(75)  # Valor sempre com largura fixa
     entry_qtd.textChanged.connect(lambda: limitar_texto(entry_qtd, 6))    
 
     entry_val = QLineEdit()
     entry_val.setPlaceholderText("VALOR")
+    entry_val.setObjectName("entry_val")
+    entry_val.setMaximumWidth(65)
     entry_val.setMaxLength(10)
-    entry_val.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)  
-    entry_val.setFixedWidth(125)  # Valor sempre com largura fixa
     entry_val.textChanged.connect(lambda: limitar_texto(entry_val, 10))
 
+    # Adicionando os widgets ao grid, garantindo alinhamento
     app.linhas_layout.addWidget(entry_loc, linha_num, 0)
     app.linhas_layout.addWidget(entry_desc, linha_num, 1)
     app.linhas_layout.addWidget(entry_qtd, linha_num, 2)
     app.linhas_layout.addWidget(entry_val, linha_num, 3)
 
+    # Incrementa o contador de linhas
+    app.contador += 1
+
+    # Salva os widgets na lista para referência futura
     app.linhas.append({
         "loc": entry_loc,
         "desc": entry_desc,
@@ -60,16 +60,17 @@ def adicionar_linhas(app, linha_num, y=None):
         "val": entry_val
     })
 
+
     y_base = 293
     y_espaco = 30
     if y is None:
         y = y_base + (linha_num - 1) * y_espaco
 
     campos = {
-        f"loc{linha_num}": 60.967,#65.15
-        f"desc{linha_num}": 275.8064,#
-        f"qtd{linha_num}": 473.535,#445.5
-        f"val{linha_num}": 542.55,#531
+        f"loc{linha_num}": 60.967,
+        f"desc{linha_num}": 275.8064,
+        f"qtd{linha_num}": 473.535,
+        f"val{linha_num}": 542.55,
     }
     
     for chave, x in campos.items():
