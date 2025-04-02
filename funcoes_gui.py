@@ -1,11 +1,71 @@
-from PyQt6.QtWidgets import QSizePolicy, QLineEdit, QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QTextEdit, QLineEdit, QFileDialog, QMessageBox
 from gerador_pdf import preencher_pdf, atualizar_posicoes
+from PyQt6.QtGui import QTextCursor
+from PyQt6.QtCore import Qt
 
-def limitar_texto(entry, limite):
-    #Impede que o usuário digite mais caracteres do que o limite
-    texto = entry.text()
-    if len(texto) > limite:
-        entry.setText(texto[:limite])
+def limitar_texto(entry, max_length=96, max_chars_per_line=48):
+    if isinstance(entry, QTextEdit):
+        texto = entry.toPlainText()
+        linhas = []
+        atual = ""
+
+        for char in texto:
+            if len(atual) >= max_chars_per_line:  # Se atingir o limite por linha
+                linhas.append(atual)
+                atual = ""
+
+                if len(linhas) >= 2:  # Se já tiver duas linhas, para
+                    break
+
+            atual += char
+
+        if atual:  # Adiciona a última linha, se existir
+            linhas.append(atual)
+
+        entry.blockSignals(True)  # Evita loop infinito ao redefinir texto
+        entry.setPlainText("\n".join(linhas))
+        entry.moveCursor(QTextCursor.End)  # Mantém o cursor no final
+        entry.blockSignals(False)  # Reativa os sinais
+
+from PyQt6.QtGui import QTextCursor
+
+def limitar_texto_multilinha(entry, max_linhas, max_chars_por_linha):
+    texto = entry.toPlainText()
+    linhas = []
+    atual = ""
+
+    for char in texto:
+        if len(atual) >= max_chars_por_linha:  # Limite por linha
+            linhas.append(atual)
+            atual = ""
+
+            if len(linhas) >= max_linhas:  # Limite de número de linhas
+                break
+
+        atual += char
+
+    if atual:
+        linhas.append(atual)
+
+    entry.blockSignals(True)  # Evita loop infinito ao redefinir texto
+    entry.setPlainText("\n".join(linhas))
+    cursor = entry.textCursor()
+    cursor.setPosition(len(entry.toPlainText()))  # Ajusta cursor no final
+    entry.setTextCursor(cursor)
+    entry.blockSignals(False)  # Reativa sinais
+
+
+def limitar_linhas(text_edit, max_linhas):
+    texto = text_edit.toPlainText()
+    linhas = texto.split("\n")
+    
+    if len(linhas) > max_linhas:
+        cursor = text_edit.textCursor()
+        cursor.movePosition(QTextCursor.MoveOperation.Start)  # Volta ao início
+        cursor.select(QTextCursor.SelectionType.Document)     # Seleciona tudo
+        cursor.removeSelectedText()                          # Remove texto extra
+        text_edit.setPlainText("\n".join(linhas[:max_linhas]))
+        text_edit.moveCursor(QTextCursor.MoveOperation.End)  # Mantém o cursor no final
 
 def dividir_texto_centralizando(texto, limite=34):
     if len(texto) <= limite:
@@ -13,27 +73,48 @@ def dividir_texto_centralizando(texto, limite=34):
     linhas = [texto[:limite], texto[limite:2*limite].strip()]
     return linhas
 
-def adicionar_linhas(app, linha_num, y=None):
+def ajustar_altura(text_edit):
+    doc = text_edit.document()
+    doc.setTextWidth(text_edit.viewport().width())  
+    text_edit.setFixedHeight(min(60, int(doc.size().height()) + 2))
 
-    entry_loc = QLineEdit()
+def transformar_maiusculo(entry):
+    cursor = entry.textCursor()
+    pos = cursor.position()  # Guarda a posição do cursor
+    texto = entry.toPlainText().upper()
+    entry.blockSignals(True)  # Evita loops infinitos de sinal
+    entry.setPlainText(texto)
+    entry.blockSignals(False)
+    cursor.setPosition(pos)  # Restaura a posição do cursor
+    entry.setTextCursor(cursor)
+
+def adicionar_linhas(app, linha_num, y=None):
+    entry_loc = QTextEdit()
     entry_loc.setPlaceholderText("LOCAL")
     entry_loc.setObjectName("entry_loc")
-    entry_loc.setMaximumWidth(125)
-    entry_loc.setMaxLength(24)
+    entry_loc.setFixedHeight(30)  # Altura inicial mínima
+    entry_loc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, 24))
+    entry_loc.textChanged.connect(lambda: transformar_maiusculo(entry_loc))
+    entry_loc.textChanged.connect(lambda: limitar_linhas(entry_loc, 2))
+    entry_loc.textChanged.connect(lambda: ajustar_altura(entry_loc))
 
-    entry_desc = QLineEdit()
+    entry_desc = QTextEdit()
     entry_desc.setPlaceholderText("DESCRIÇÃO")
     entry_desc.setObjectName("entry_desc")
-    entry_desc.setMaximumWidth(300)
-    entry_desc.setMaxLength(96)
+    entry_desc.setFixedHeight(30)  # Altura inicial mínima
+    entry_desc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, 96))
+    entry_desc.textChanged.connect(lambda: transformar_maiusculo(entry_desc))
+    entry_desc.textChanged.connect(lambda: limitar_linhas(entry_desc, 2))
+    entry_desc.textChanged.connect(lambda: ajustar_altura(entry_desc))
 
     entry_qtd = QLineEdit()
     entry_qtd.setPlaceholderText("QUANTIDADE")
     entry_qtd.setObjectName("entry_qtd")
     entry_qtd.setMaximumWidth(75)
     entry_qtd.setMaxLength(6)
+    entry_qtd.textChanged.connect(lambda: entry_qtd.setText(entry_qtd.text().upper()))
     entry_qtd.textChanged.connect(lambda: limitar_texto(entry_qtd, 6))    
 
     entry_val = QLineEdit()
@@ -41,6 +122,7 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_val.setObjectName("entry_val")
     entry_val.setMaximumWidth(65)
     entry_val.setMaxLength(10)
+    entry_val.textChanged.connect(lambda: entry_val.setText(entry_val.text().upper()))
     entry_val.textChanged.connect(lambda: limitar_texto(entry_val, 10))
 
     # Adicionando os widgets ao grid, garantindo alinhamento
@@ -92,8 +174,8 @@ def enviar_dados(self):
     dados = {}  # Garante que o dicionário começa vazio
 
     for i, linha in enumerate(self.linhas, start=1):  # Agora percorre as linhas corretamente
-        loc = linha["loc"].text() or " "
-        desc = linha["desc"].text() or " "
+        loc = linha["loc"].toPlainText() or " "
+        desc = linha["desc"].toPlainText() or " "
         qtd = linha["qtd"].text() or " "
         val = linha["val"].text() or " "
 

@@ -32,7 +32,7 @@ class PreencherPDFApp(QWidget):
     def init_ui(self):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M")
         self.setWindowIcon(QIcon("pdficon.png"))
-        self.setGeometry(10, 880, 850, 200)
+        self.setGeometry(10, 220, 750, 200)
 
         self.logo = QLabel(self)
         self.logo.setPixmap(QPixmap("logo-marmoraria.png"))  # Carregar imagem
@@ -42,11 +42,11 @@ class PreencherPDFApp(QWidget):
 
         self.label_titulo = QLabel("Orçamento")
         self.label_titulo.setObjectName("titulo")
-        self.layout.addWidget(self.label_titulo, 0, 0, 1, 3)
+        self.layout.addWidget(self.label_titulo, 0, 0, 1, 2)
 
         self.btn_selecionar = QPushButton("Selecionar outro PDF")
         self.btn_selecionar.clicked.connect(lambda: selecionar_pdf(self))
-        self.layout.addWidget(self.btn_selecionar, 0, 3, 1, 3)
+        self.layout.addWidget(self.btn_selecionar, 0, 3, 1, 2)
 
         self.linhas_layout.setColumnStretch(0, 1)  # LOCAL menor
         self.linhas_layout.setColumnStretch(1, 3)  # DESCRIÇÃO maior
