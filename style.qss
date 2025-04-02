@@ -1,7 +1,7 @@
 /* Estilo para a Janela */
 QWidget {
     background-color: #e5e5e5;  /* Cinza claro */
-    font-family: Arial, sans-serif;
+    font-family: "Courier New";
     font-size: 12pt;
 }
 
@@ -52,8 +52,9 @@ QLineEdit {
     background-color: #ffffff;
     border: 2px solid rgb(75, 75, 75);
     border-radius: 5px;
-    padding: 3.5px;
+    padding: 0px;
     margin: 0px;
+    min-height: 30px;
     font-size: 11pt;
     selection-background-color: #009688; /* Destacar texto selecionado */
 }

@@ -3,75 +3,51 @@ from gerador_pdf import preencher_pdf, atualizar_posicoes
 from PyQt6.QtGui import QTextCursor
 from PyQt6.QtCore import Qt
 
-def limitar_texto(entry, max_length=96, max_chars_per_line=48):
-    if isinstance(entry, QTextEdit):
-        texto = entry.toPlainText()
-        linhas = []
-        atual = ""
-
-        for char in texto:
-            if len(atual) >= max_chars_per_line:  # Se atingir o limite por linha
-                linhas.append(atual)
-                atual = ""
-
-                if len(linhas) >= 2:  # Se já tiver duas linhas, para
-                    break
-
-            atual += char
-
-        if atual:  # Adiciona a última linha, se existir
-            linhas.append(atual)
-
-        entry.blockSignals(True)  # Evita loop infinito ao redefinir texto
-        entry.setPlainText("\n".join(linhas))
-        entry.moveCursor(QTextCursor.End)  # Mantém o cursor no final
-        entry.blockSignals(False)  # Reativa os sinais
-
-from PyQt6.QtGui import QTextCursor
-
-def limitar_texto_multilinha(entry, max_linhas, max_chars_por_linha):
+def limitar_texto(entry, max_linhas=2, max_chars_por_linha=48):
     texto = entry.toPlainText()
+    linhas = texto.split("\n")  # Divide o texto nas linhas existentes
+    novas_linhas = []
+
+    for linha in linhas:
+        while len(linha) > max_chars_por_linha:  # Divide linhas excedentes
+            novas_linhas.append(linha[:max_chars_por_linha])
+            linha = linha[max_chars_por_linha:]  # Resto da linha
+
+        novas_linhas.append(linha)
+
+        if len(novas_linhas) >= max_linhas:  # Limita o número de linhas
+            break
+
+    # Junta o texto limitado
+    texto_limitado = "\n".join(novas_linhas[:max_linhas])
+
+    # Bloqueia os sinais para evitar loops infinitos
+    entry.blockSignals(True)
+    entry.setPlainText(texto_limitado)
+    
+    # Ajusta o cursor para o final do texto
+    cursor = entry.textCursor()
+    cursor.movePosition(QTextCursor.MoveOperation.End)
+    entry.setTextCursor(cursor)
+    
+    # Reativa os sinais
+    entry.blockSignals(False)
+
+def dividir_texto_centralizando(texto, limite):
     linhas = []
     atual = ""
 
     for char in texto:
-        if len(atual) >= max_chars_por_linha:  # Limite por linha
+        if len(atual) >= limite:
             linhas.append(atual)
             atual = ""
-
-            if len(linhas) >= max_linhas:  # Limite de número de linhas
-                break
-
         atual += char
 
     if atual:
         linhas.append(atual)
 
-    entry.blockSignals(True)  # Evita loop infinito ao redefinir texto
-    entry.setPlainText("\n".join(linhas))
-    cursor = entry.textCursor()
-    cursor.setPosition(len(entry.toPlainText()))  # Ajusta cursor no final
-    entry.setTextCursor(cursor)
-    entry.blockSignals(False)  # Reativa sinais
+    return linhas[:2]  # Retorna no máximo 2 linhas
 
-
-def limitar_linhas(text_edit, max_linhas):
-    texto = text_edit.toPlainText()
-    linhas = texto.split("\n")
-    
-    if len(linhas) > max_linhas:
-        cursor = text_edit.textCursor()
-        cursor.movePosition(QTextCursor.MoveOperation.Start)  # Volta ao início
-        cursor.select(QTextCursor.SelectionType.Document)     # Seleciona tudo
-        cursor.removeSelectedText()                          # Remove texto extra
-        text_edit.setPlainText("\n".join(linhas[:max_linhas]))
-        text_edit.moveCursor(QTextCursor.MoveOperation.End)  # Mantém o cursor no final
-
-def dividir_texto_centralizando(texto, limite=34):
-    if len(texto) <= limite:
-        return [texto]
-    linhas = [texto[:limite], texto[limite:2*limite].strip()]
-    return linhas
 
 def ajustar_altura(text_edit):
     doc = text_edit.document()
@@ -96,7 +72,7 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_loc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, 24))
     entry_loc.textChanged.connect(lambda: transformar_maiusculo(entry_loc))
-    entry_loc.textChanged.connect(lambda: limitar_linhas(entry_loc, 2))
+
     entry_loc.textChanged.connect(lambda: ajustar_altura(entry_loc))
 
     entry_desc = QTextEdit()
@@ -106,7 +82,7 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_desc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, 96))
     entry_desc.textChanged.connect(lambda: transformar_maiusculo(entry_desc))
-    entry_desc.textChanged.connect(lambda: limitar_linhas(entry_desc, 2))
+
     entry_desc.textChanged.connect(lambda: ajustar_altura(entry_desc))
 
     entry_qtd = QLineEdit()
@@ -114,7 +90,6 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_qtd.setObjectName("entry_qtd")
     entry_qtd.setMaximumWidth(75)
     entry_qtd.setMaxLength(6)
-    entry_qtd.textChanged.connect(lambda: entry_qtd.setText(entry_qtd.text().upper()))
     entry_qtd.textChanged.connect(lambda: limitar_texto(entry_qtd, 6))    
 
     entry_val = QLineEdit()
@@ -122,7 +97,6 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_val.setObjectName("entry_val")
     entry_val.setMaximumWidth(65)
     entry_val.setMaxLength(10)
-    entry_val.textChanged.connect(lambda: entry_val.setText(entry_val.text().upper()))
     entry_val.textChanged.connect(lambda: limitar_texto(entry_val, 10))
 
     # Adicionando os widgets ao grid, garantindo alinhamento
