@@ -2,7 +2,7 @@
 QWidget {
     background-color: #e5e5e5;  /* Cinza claro */
     font-family: "Courier New";
-    font-size: 12pt;
+    
 }
 
 /* Texto do titulo (Label) */
@@ -29,7 +29,7 @@ QTextEdit {
     margin: 0px;
     min-height: 30px;
     max-height: 60px;
-    font-size: 11pt;
+    font-size: 14pt;
     selection-background-color: #009688; /* Destacar texto selecionado */
 }
 
@@ -55,7 +55,7 @@ QLineEdit {
     padding: 0px;
     margin: 0px;
     min-height: 30px;
-    font-size: 11pt;
+    font-size: 14pt;
     selection-background-color: #009688; /* Destacar texto selecionado */
 }
 
