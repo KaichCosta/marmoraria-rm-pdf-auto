@@ -3,45 +3,7 @@ from gerador_pdf import preencher_pdf, atualizar_posicoes
 from PyQt6.QtGui import QTextCursor
 from PyQt6.QtCore import Qt
 
-def limitar_texto(entry, max_linhas=2, max_chars_por_linha=48):
-    if isinstance (entry, QTextEdit):
-        texto = entry.toPlainText()
-        is_multilinha = True
-    elif isinstance(entry, QLineEdit):
-        texto = entry.text()
-        is_multilinha = False
-    else:
-        return
-    linhas = texto.split("\n") if is_multilinha else [texto]  # Divide o texto nas linhas existentes
-    novas_linhas = []
 
-    for linha in linhas:
-        while len(linha) > max_chars_por_linha:  # Divide linhas excedentes
-            novas_linhas.append(linha[:max_chars_por_linha])
-            linha = linha[max_chars_por_linha:]  # Resto da linha
-
-        novas_linhas.append(linha)
-
-        if len(novas_linhas) >= max_linhas:  # Limita o número de linhas
-            break
-
-    # Junta o texto limitado
-    texto_limitado = "\n".join(novas_linhas[:max_linhas])
-
-    # Bloqueia os sinais para evitar loops infinitos
-    entry.blockSignals(True)
-    # Define o texto dependendo do tipo do widget
-    if is_multilinha:
-        entry.setPlainText(texto_limitado)
-        # Ajusta o cursor para o final
-        cursor = entry.textCursor()
-        cursor.movePosition(QTextCursor.MoveOperation.End)
-        entry.setTextCursor(cursor)
-    else:
-        entry.setText(texto_limitado) # Se for QLineEdit
-    
-    # Reativa os sinais
-    entry.blockSignals(False)
 
 def dividir_texto_centralizando(texto, limite): 
     linhas = []
@@ -58,30 +20,53 @@ def dividir_texto_centralizando(texto, limite):
 
     return linhas[:2]  # Retorna no máximo 2 linhas
 
+from PyQt6.QtGui import QTextCursor
 
-def ajustar_altura(text_edit):
-    doc = text_edit.document()
-    doc.setTextWidth(text_edit.viewport().width())  
-    text_edit.setFixedHeight(min(60, int(doc.size().height()) + 2))
-
-def transformar_maiusculo(entry):
-    # Verifica o tipo de widget
+def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=False):
+    
     if isinstance(entry, QTextEdit):
+        texto = entry.toPlainText().upper()  # Transforma em maiúsculo
+        linhas = texto.split("\n")  # Divide o texto em linhas
+        novas_linhas = []
+
+        for linha in linhas:
+            # Divide linhas excedentes
+            while len(linha) > max_chars_por_linha:
+                novas_linhas.append(linha[:max_chars_por_linha])
+                linha = linha[max_chars_por_linha:]
+            novas_linhas.append(linha)
+            if len(novas_linhas) >= max_linhas:
+                break
+
+        # Junta o texto limitado
+        texto_limitado = "\n".join(novas_linhas[:max_linhas])
+        entry.blockSignals(True)
+        entry.setPlainText(texto_limitado)
+
+        # Ajusta o cursor para o final
         cursor = entry.textCursor()
-        pos = cursor.position()  # Guarda a posição do cursor
-        texto = entry.toPlainText().upper()  # Obtém texto e transforma em maiúsculo
-        entry.blockSignals(True)  # Evita loops infinitos de sinal
-        entry.setPlainText(texto)  # Define o texto transformado
-        entry.blockSignals(False)
-        cursor.setPosition(pos)  # Restaura a posição do cursor
+        cursor.movePosition(QTextCursor.MoveOperation.End)
         entry.setTextCursor(cursor)
-    elif isinstance(entry, QLineEdit):
-        pos = entry.cursorPosition()  # Guarda a posição do cursor
-        texto = entry.text().upper()  # Obtém texto e transforma em maiúsculo
-        entry.blockSignals(True)  # Evita loops infinitos de sinal
-        entry.setText(texto)  # Define o texto transformado
+
+        # Ajusta a altura do QTextEdit, se necessário
+        if ajustar_altura_flag:
+            ajustar_altura(entry)
         entry.blockSignals(False)
-        entry.setCursorPosition(pos)  # Restaura a posição do cursor
+
+    elif isinstance(entry, QLineEdit):
+        texto = entry.text().upper()[:max_chars_por_linha]  # Transforma em maiúsculo e limita caracteres
+        entry.blockSignals(True)
+        entry.setText(texto)
+        entry.blockSignals(False)
+
+def ajustar_altura(entry):
+
+    linhas = entry.toPlainText().split("\n")
+    altura_por_linha = 15  # Altura em pixels por linha
+    altura_minima = 30  # Altura inicial mínima
+
+    nova_altura = max(altura_minima, len(linhas) * altura_por_linha)
+    entry.setFixedHeight(nova_altura)
 
 def adicionar_linhas(app, linha_num, y=None):
     entry_loc = QTextEdit()
@@ -89,38 +74,28 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_loc.setObjectName("entry_loc")
     entry_loc.setFixedHeight(30)  # Altura inicial mínima
     entry_loc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-    entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, 24))
-    entry_loc.textChanged.connect(lambda: transformar_maiusculo(entry_loc))
-    entry_loc.textChanged.connect(lambda: limitar_texto(entry_loc, max_linhas=2, max_chars_por_linha=24))
-    entry_loc.textChanged.connect(lambda: ajustar_altura(entry_loc))
+    entry_loc.textChanged.connect(lambda: processar_texto(entry_loc, max_linhas=2, max_chars_por_linha=12, ajustar_altura_flag=True))
 
     entry_desc = QTextEdit()
     entry_desc.setPlaceholderText("DESCRIÇÃO")
     entry_desc.setObjectName("entry_desc")
     entry_desc.setFixedHeight(30)  # Altura inicial mínima
     entry_desc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-    entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, 96))
-    entry_desc.textChanged.connect(lambda: transformar_maiusculo(entry_desc))
-    entry_desc.textChanged.connect(lambda: limitar_texto(entry_desc, max_linhas=2, max_chars_por_linha=48))
-    entry_desc.textChanged.connect(lambda: ajustar_altura(entry_desc))
+    entry_desc.textChanged.connect(lambda: processar_texto(entry_desc, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=True))
 
     entry_qtd = QLineEdit()
     entry_qtd.setPlaceholderText("QUANTIDADE")
     entry_qtd.setObjectName("entry_qtd")
     entry_qtd.setMaximumWidth(75)
     entry_qtd.setMaxLength(6)
-    entry_qtd.textChanged.connect(lambda: limitar_texto(entry_qtd, 6))
-    entry_qtd.textChanged.connect(lambda: transformar_maiusculo(entry_qtd))
-    entry_qtd.textChanged.connect(lambda: limitar_texto(entry_qtd, max_linhas=1, max_chars_por_linha=6)) 
+    entry_qtd.textChanged.connect(lambda: processar_texto(entry_qtd, max_linhas=1, max_chars_por_linha=6))
 
     entry_val = QLineEdit()
     entry_val.setPlaceholderText("VALOR")
     entry_val.setObjectName("entry_val")
     entry_val.setMaximumWidth(65)
     entry_val.setMaxLength(10)
-    entry_val.textChanged.connect(lambda: limitar_texto(entry_val, 10))
-    entry_val.textChanged.connect(lambda: transformar_maiusculo(entry_val))
-    entry_val.textChanged.connect(lambda: limitar_texto(entry_val, max_linhas=1, max_chars_por_linha=10))
+    entry_val.textChanged.connect(lambda: processar_texto(entry_val, max_linhas=1, max_chars_por_linha=10))
 
     # Adicionando os widgets ao grid, garantindo alinhamento
     app.linhas_layout.addWidget(entry_loc, linha_num, 0)

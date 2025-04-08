@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QRadioButton, QTextEdit, QGridLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
-from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas, limitar_texto
+from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas, processar_texto
 from PyQt6.QtGui import QIcon, QPixmap
 import sys
 
@@ -29,11 +29,11 @@ class PreencherPDFApp(QWidget):
 
         self.entry_loc = QTextEdit()
         self.entry_loc.setPlaceholderText("LOCAL")
-        self.entry_loc.textChanged.connect(lambda: limitar_texto(self.entry_loc, 2, 24))
+        self.entry_loc.textChanged.connect(lambda: processar_texto(self.entry_loc, 2, 24))
 
         self.entry_desc = QTextEdit()
         self.entry_desc.setPlaceholderText("DESCRIÇÃO")
-        self.entry_desc.textChanged.connect(lambda: limitar_texto(self.entry_desc, 2, 96))
+        self.entry_desc.textChanged.connect(lambda: processar_texto(self.entry_desc, 2, 96))
 
 
         self.init_ui()  # Inicializa a interface

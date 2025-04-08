@@ -39,13 +39,13 @@ QTextEdit:focus {
 }
 
 QTextEdit#entry_loc {
-    min-width: 137px;
-    max-width: 137px;
+    min-width: 142px;
+    max-width: 142px;
 }
 
 QTextEdit#entry_desc {
-    min-width: 482px;
-    max-width: 482px;
+    min-width: 505px;
+    max-width: 505px;
 }
 
 /* Caixa de Entrada (LineEdit) */
@@ -71,8 +71,8 @@ QLineEdit#entry_qtd {
 }
 
 QLineEdit#entry_val {
-    min-width: 97px;
-    max-width: 97px;
+    min-width: 115px;
+    max-width: 115px;
 }
 
 /* Botões (PushButton) */
