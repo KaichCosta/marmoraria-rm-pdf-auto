@@ -3,27 +3,30 @@ from gerador_pdf import preencher_pdf, atualizar_posicoes
 from PyQt6.QtGui import QTextCursor
 from PyQt6.QtCore import Qt
 
+def dividir_texto_centralizando(texto, limite):
+    # Divide nas quebras manuais feitas pelo usuário
+    linhas_usuario = texto.split("\n")
+    linhas_finais = []
 
+    for linha in linhas_usuario:
+        palavras = linha.strip().split()
+        linha_atual = ""
 
-def dividir_texto_centralizando(texto, max_por_linha):
-    texto = texto.strip()
-    if not texto:
-        return [" "]
+        for palavra in palavras:
+            if len(linha_atual + " " + palavra) <= limite:
+                if linha_atual:
+                    linha_atual += " " + palavra
+                else:
+                    linha_atual = palavra
+            else:
+                linhas_finais.append(linha_atual)
+                linha_atual = palavra
 
-    if len(texto) <= max_por_linha:
-        return [texto]
+        if linha_atual:
+            linhas_finais.append(linha_atual)
 
-    # Quebra inteligente: tenta quebrar em espaço antes do limite
-    primeira_linha = texto[:max_por_linha]
-    if " " in primeira_linha:
-        ultimo_espaco = primeira_linha.rfind(" ")
-        primeira_linha = texto[:ultimo_espaco]
-        segunda_linha = texto[ultimo_espaco + 1:]
-    else:
-        primeira_linha = texto[:max_por_linha]
-        segunda_linha = texto[max_por_linha:]
+    return linhas_finais[:2]  # limita no máximo a 2 linhas
 
-    return [primeira_linha.strip(), segunda_linha.strip()]
 
 def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=False):
     
