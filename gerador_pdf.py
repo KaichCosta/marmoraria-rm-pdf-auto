@@ -19,9 +19,21 @@ def preencher_pdf(pdf_path, dados):
         for chave, (x, y) in posicoes.items():
             if chave in dados:  # Certificar-se de que a chave existe no dicionário de dados
                 texto = dados[chave]
-                x_centralizado, y_centralizado = centralizar_texto(x, y, texto, fonte_size=12)
-                # Inserir texto no PDF na posição calculada
-                page.insert_text((x_centralizado, y_centralizado), texto, fontsize=12, fontname="Courier", color=(0, 0, 0))
+                linhas = texto.split('\n')  # Quebra manualmente
+
+                for i, linha in enumerate(texto.splitlines()):
+                    # Ajusta a posição vertical para cada linha (ex: 14px entre linhas)
+                    y_linha = y + (i * 13)
+                    x_centralizado, _ = centralizar_texto(x, y_linha, linha, fonte_size=12)
+                    page.insert_text(
+                        (x_centralizado, y_linha),
+                        linha,
+                        fontsize=12,
+                        fontname="Courier",
+                        color=(0, 0, 0),
+                        render_mode=0,
+                        overlay=True)
+
         novo_caminho = pdf_path.replace(".pdf", f" Orçamento.pdf")
         doc.save(novo_caminho)
         return novo_caminho

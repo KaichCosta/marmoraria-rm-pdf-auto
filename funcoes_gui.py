@@ -163,8 +163,9 @@ def enviar_dados(self):
             atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
             dados[f"loc{i}_1"] = linhas_loc[0]
         else:
-            y_linha1 = y_centro - 6  # Primeira linha sobe um pouco
-            y_linha2 = y_centro + 6  # Segunda linha desce um pouco
+            espaco_linha = 10.5  # espaço entre linhas
+            y_linha1 = y_centro - espaco_linha / 2
+            y_linha2 = y_centro + espaco_linha / 2
             atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
             atualizar_posicoes(f"loc{i}_2", 60.967, y_linha2)
             dados[f"loc{i}_1"] = linhas_loc[0]
@@ -177,8 +178,9 @@ def enviar_dados(self):
             atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
             dados[f"desc{i}_1"] = linhas_desc[0]
         else:
-            y_linha1 = y_centro - 6  # Primeira linha sobe um pouco
-            y_linha2 = y_centro + 6  # Segunda linha desce um pouco
+            espaco_linha = 10.5  # espaço entre linhas
+            y_linha1 = y_centro - espaco_linha / 2
+            y_linha2 = y_centro + espaco_linha / 2
             atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
             atualizar_posicoes(f"desc{i}_2", 275.8064, y_linha2)
             dados[f"desc{i}_1"] = linhas_desc[0]
