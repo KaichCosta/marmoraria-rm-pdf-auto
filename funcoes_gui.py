@@ -62,7 +62,7 @@ def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_
 def ajustar_altura(entry):
 
     linhas = entry.toPlainText().split("\n")
-    altura_por_linha = 15  # Altura em pixels por linha
+    altura_por_linha = 30  # Altura em pixels por linha
     altura_minima = 30  # Altura inicial mínima
 
     nova_altura = max(altura_minima, len(linhas) * altura_por_linha)

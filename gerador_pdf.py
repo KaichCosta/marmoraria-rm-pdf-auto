@@ -13,7 +13,7 @@ def atualizar_posicoes(chave, x, y):
 
 def preencher_pdf(pdf_path, dados):
     doc = fitz.open(pdf_path)
-    page = doc[7]  #Página 8 do PDF
+    page = doc[8]  #Página 9 do PDF
 
     try:
         for chave, (x, y) in posicoes.items():
@@ -22,9 +22,7 @@ def preencher_pdf(pdf_path, dados):
                 x_centralizado, y_centralizado = centralizar_texto(x, y, texto, fonte_size=12)
                 # Inserir texto no PDF na posição calculada
                 page.insert_text((x_centralizado, y_centralizado), texto, fontsize=12, fontname="Courier", color=(0, 0, 0))
-    
-    #novo caminho é variavel para mudar o nome do arqui, posso usar um label pra escolher o nome do cliente epor numa varialvel 'cliente' e por em 'novocaminho'
-        novo_caminho = pdf_path.replace(".pdf", " Orçamento.pdf")
+        novo_caminho = pdf_path.replace(".pdf", f" Orçamento.pdf")
         doc.save(novo_caminho)
         return novo_caminho
     except Exception as e:
