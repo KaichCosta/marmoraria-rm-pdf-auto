@@ -5,22 +5,25 @@ from PyQt6.QtCore import Qt
 
 
 
-def dividir_texto_centralizando(texto, limite): 
-    linhas = []
-    atual = ""
+def dividir_texto_centralizando(texto, max_por_linha):
+    texto = texto.strip()
+    if not texto:
+        return [" "]
 
-    for char in texto:
-        if len(atual) >= limite:
-            linhas.append(atual)
-            atual = ""
-        atual += char
+    if len(texto) <= max_por_linha:
+        return [texto]
 
-    if atual:
-        linhas.append(atual)
+    # Quebra inteligente: tenta quebrar em espaço antes do limite
+    primeira_linha = texto[:max_por_linha]
+    if " " in primeira_linha:
+        ultimo_espaco = primeira_linha.rfind(" ")
+        primeira_linha = texto[:ultimo_espaco]
+        segunda_linha = texto[ultimo_espaco + 1:]
+    else:
+        primeira_linha = texto[:max_por_linha]
+        segunda_linha = texto[max_por_linha:]
 
-    return linhas[:2]  # Retorna no máximo 2 linhas
-
-from PyQt6.QtGui import QTextCursor
+    return [primeira_linha.strip(), segunda_linha.strip()]
 
 def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=False):
     
@@ -156,14 +159,14 @@ def enviar_dados(self):
         y_espaco = 30  # Espaço entre cada item na tabela
         y_centro = y_base + (i - 1) * y_espaco  # Define a posição central de cada item
 
-        linhas_loc = dividir_texto_centralizando(loc, 12)  # Divide os caracteres de local em partes de até 15 caracteres)
+        linhas_loc = dividir_texto_centralizando(loc, 12)  # Divide os caracteres de local em 2 partes de até 12 caracteres)
 
         if len(linhas_loc) == 1:
             y_linha1 = y_centro  # Mantém no centro do retângulo
             atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
             dados[f"loc{i}_1"] = linhas_loc[0]
         else:
-            espaco_linha = 10.5  # espaço entre linhas
+            espaco_linha = 14  # espaço entre linhas
             y_linha1 = y_centro - espaco_linha / 2
             y_linha2 = y_centro + espaco_linha / 2
             atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
@@ -178,7 +181,7 @@ def enviar_dados(self):
             atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
             dados[f"desc{i}_1"] = linhas_desc[0]
         else:
-            espaco_linha = 10.5  # espaço entre linhas
+            espaco_linha = 14  # espaço entre linhas
             y_linha1 = y_centro - espaco_linha / 2
             y_linha2 = y_centro + espaco_linha / 2
             atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
@@ -193,6 +196,13 @@ def enviar_dados(self):
         dados[f"val{i}"] = val
 
     print(dados)
-    novo_pdf = preencher_pdf(self.pdf_path, dados)
-    if novo_pdf:
+    print(f"Linha {i} - loc: {linhas_loc}")  # ← deve mostrar 1 ou 2 linhas
+
+    doc = preencher_pdf(self.pdf_path, dados)
+    if doc:
+        novo_pdf = self.pdf_path.replace(".pdf", " Orçamento.pdf")
+        doc.save(novo_pdf)
+        doc.close()
         QMessageBox.information(self, "Sucesso", f"PDF salvo como: {novo_pdf}")
+    else:
+        QMessageBox.warning(self, "Erro", "Ocorreu um erro ao preencher o PDF.")
