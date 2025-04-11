@@ -31,10 +31,30 @@ def dividir_texto_centralizando(texto, limite):
     
     return linhas_finais[:2]
 
-def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=False):
+def ajustar_cursor(entry, texto_modificado):
+    # Obtemos o cursor atual e posição relativa
+    cursor = entry.textCursor()
+    pos_original = cursor.position()  # Captura a posição original no texto atual
     
+    # Bloqueia os sinais e atualiza o texto
+    entry.blockSignals(True)
+    entry.setPlainText(texto_modificado)
+    entry.blockSignals(False)
+    
+    # Verifica se a posição original é válida dentro do novo texto
+    if pos_original > len(texto_modificado):
+        pos_original = len(texto_modificado)  # Ajusta para o final, se necessário
+
+    # Restaura o cursor na posição original
+    cursor.setPosition(pos_original, QTextCursor.MoveMode.KeepAnchor)  # Mantém a posição relativa
+    entry.setTextCursor(cursor)
+
+
+def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=False):    
+
     if isinstance(entry, QTextEdit):
         texto = entry.toPlainText().upper()  # Transforma em maiúsculo
+        ajustar_cursor(entry, texto) 
         linhas = texto.split("\n")  # Divide o texto em linhas
         novas_linhas = []
 
@@ -51,15 +71,6 @@ def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_
         texto_limitado = "\n".join(novas_linhas[:max_linhas])
         entry.blockSignals(True)
         entry.setPlainText(texto_limitado)
-        # Ajusta o cursor para o final
-        cursor = entry.textCursor()
-        cursor.movePosition(QTextCursor.MoveOperation.End)
-        entry.setTextCursor(cursor)
-
-                # Ajusta o cursor para o final
-        cursor = entry.textCursor()
-        cursor.movePosition(QTextCursor.MoveOperation.End)
-
 
         # Ajusta a altura do QTextEdit, se necessário
         if ajustar_altura_flag:
