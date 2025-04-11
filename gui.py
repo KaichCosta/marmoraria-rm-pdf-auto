@@ -39,7 +39,7 @@ class PreencherPDFApp(QWidget):
         self.init_ui()  # Inicializa a interface
 
     def init_ui(self):
-        self.setWindowTitle("Orçamento PDF Marmoraria R&M")
+        self.setWindowTitle("Orçamento PDF Marmoraria R&M | CNPJ 32.504.738/0001-82")
         self.setWindowIcon(QIcon("pdficon.png"))
         self.setGeometry(10, 220, 750, 200)
 

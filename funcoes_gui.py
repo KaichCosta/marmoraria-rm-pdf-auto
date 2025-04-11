@@ -4,7 +4,6 @@ from PyQt6.QtGui import QTextCursor
 from PyQt6.QtCore import Qt
 
 def dividir_texto_centralizando(texto, limite):
-    # Divide nas quebras manuais feitas pelo usuário
     linhas_usuario = texto.split("\n")
     linhas_finais = []
 
@@ -19,14 +18,18 @@ def dividir_texto_centralizando(texto, limite):
                 else:
                     linha_atual = palavra
             else:
-                linhas_finais.append(linha_atual)
+                if linha_atual:  # só adiciona se tiver algo
+                    linhas_finais.append(linha_atual)
                 linha_atual = palavra
 
         if linha_atual:
             linhas_finais.append(linha_atual)
 
-    return linhas_finais[:2]  # limita no máximo a 2 linhas
-
+    # Garante pelo menos uma linha (um espaço se nada for válido)
+    if not linhas_finais:
+        return [" "]
+    
+    return linhas_finais[:2]
 
 def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=False):
     
@@ -152,8 +155,14 @@ def enviar_dados(self):
     dados = {}  # Garante que o dicionário começa vazio
 
     for i, linha in enumerate(self.linhas, start=1):  # Agora percorre as linhas corretamente
-        loc = linha["loc"].toPlainText() or " "
-        desc = linha["desc"].toPlainText() or " "
+        loc_raw = linha["loc"].toPlainText() or " "
+        loc_linhas = loc_raw.strip().splitlines()
+        loc = " ".join(loc_linhas)  # Junta tudo como uma linha só, para dividir corretamente
+
+        desc_raw = linha["desc"].toPlainText()
+        desc_linhas = desc_raw.strip().splitlines()
+        desc = " ".join(desc_linhas)  # Junta tudo como uma linha só, para dividir corretamente
+
         qtd = linha["qtd"].text() or " "
         val = linha["val"].text() or " "
 
@@ -164,33 +173,42 @@ def enviar_dados(self):
 
         linhas_loc = dividir_texto_centralizando(loc, 12)  # Divide os caracteres de local em 2 partes de até 12 caracteres)
 
-        if len(linhas_loc) == 1:
-            y_linha1 = y_centro  # Mantém no centro do retângulo
-            atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
-            dados[f"loc{i}_1"] = linhas_loc[0]
+        if linhas_loc:
+            if len(linhas_loc) == 1:
+                y_linha1 = y_centro
+                atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
+                dados[f"loc{i}_1"] = linhas_loc[0]
+            else:
+                espaco_linha = 10.5
+                y_linha1 = y_centro - espaco_linha / 2
+                y_linha2 = y_centro + espaco_linha / 2
+                atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
+                atualizar_posicoes(f"loc{i}_2", 60.967, y_linha2)
+                dados[f"loc{i}_1"] = linhas_loc[0]
+                dados[f"loc{i}_2"] = linhas_loc[1]
         else:
-            espaco_linha = 14  # espaço entre linhas
-            y_linha1 = y_centro - espaco_linha / 2
-            y_linha2 = y_centro + espaco_linha / 2
-            atualizar_posicoes(f"loc{i}_1", 60.967, y_linha1)
-            atualizar_posicoes(f"loc{i}_2", 60.967, y_linha2)
-            dados[f"loc{i}_1"] = linhas_loc[0]
-            dados[f"loc{i}_2"] = linhas_loc[1]
+            atualizar_posicoes(f"loc{i}_1", 60.967, y_centro)
+            dados[f"loc{i}_1"] = " "
+
 
         linhas_desc = dividir_texto_centralizando(desc, 45)  # Divide a descrição em partes de até 34 caracteres
 
-        if len(linhas_desc) == 1:
-            y_linha1 = y_centro  # Mantém no centro do retângulo
-            atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
-            dados[f"desc{i}_1"] = linhas_desc[0]
+        if linhas_desc:
+            if len(linhas_desc) == 1:
+                y_linha1 = y_centro  # Mantém no centro do retângulo
+                atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
+                dados[f"desc{i}_1"] = linhas_desc[0]
+            else:
+                espaco_linha = 14  # espaço entre linhas
+                y_linha1 = y_centro - espaco_linha / 2
+                y_linha2 = y_centro + espaco_linha / 2
+                atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
+                atualizar_posicoes(f"desc{i}_2", 275.8064, y_linha2)
+                dados[f"desc{i}_1"] = linhas_desc[0]
+                dados[f"desc{i}_2"] = linhas_desc[1]
         else:
-            espaco_linha = 14  # espaço entre linhas
-            y_linha1 = y_centro - espaco_linha / 2
-            y_linha2 = y_centro + espaco_linha / 2
-            atualizar_posicoes(f"desc{i}_1", 275.8064, y_linha1)
-            atualizar_posicoes(f"desc{i}_2", 275.8064, y_linha2)
-            dados[f"desc{i}_1"] = linhas_desc[0]
-            dados[f"desc{i}_2"] = linhas_desc[1]
+            atualizar_posicoes(f"desc{i}_1", 275.8064, y_centro)
+            dados[f"loc{i}_1"] = " "
 
         #Ajusta a posição das colunas de quantidade e valor
         atualizar_posicoes(f"qtd{i}", 473.535, y_centro)
