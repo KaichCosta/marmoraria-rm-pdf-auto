@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QTextEdit, QLineEdit, QFileDialog, QMessageBox
 from gerador_pdf import preencher_pdf, atualizar_posicoes
-from PyQt6.QtGui import QTextCursor
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QTextCursor   
 
 def dividir_texto_centralizando(texto, limite):
     linhas_usuario = texto.split("\n")
@@ -48,18 +48,18 @@ def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_
                 break
 
         # Junta o texto limitado
-        cursor = entry.textCursor()  # Obtemos o cursor atual
-        pos = cursor.position()  # Salvamos a posição original do cursor
-
-        # Aqui, faça qualquer modificação no texto
-        texto = entry.toPlainText().upper()
+        texto_limitado = "\n".join(novas_linhas[:max_linhas])
         entry.blockSignals(True)
-        entry.setPlainText(texto)
-        entry.blockSignals(False)
-
-        # Restauramos a posição original do cursor
-        cursor.setPosition(pos)  # Retorna o cursor para a posição original
+        entry.setPlainText(texto_limitado)
+        # Ajusta o cursor para o final
+        cursor = entry.textCursor()
+        cursor.movePosition(QTextCursor.MoveOperation.End)
         entry.setTextCursor(cursor)
+
+                # Ajusta o cursor para o final
+        cursor = entry.textCursor()
+        cursor.movePosition(QTextCursor.MoveOperation.End)
+
 
         # Ajusta a altura do QTextEdit, se necessário
         if ajustar_altura_flag:
