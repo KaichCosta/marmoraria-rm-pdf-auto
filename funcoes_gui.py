@@ -48,13 +48,17 @@ def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_
                 break
 
         # Junta o texto limitado
-        texto_limitado = "\n".join(novas_linhas[:max_linhas])
-        entry.blockSignals(True)
-        entry.setPlainText(texto_limitado)
+        cursor = entry.textCursor()  # Obtemos o cursor atual
+        pos = cursor.position()  # Salvamos a posição original do cursor
 
-        # Ajusta o cursor para o final
-        cursor = entry.textCursor()
-        cursor.movePosition(QTextCursor.MoveOperation.End)
+        # Aqui, faça qualquer modificação no texto
+        texto = entry.toPlainText().upper()
+        entry.blockSignals(True)
+        entry.setPlainText(texto)
+        entry.blockSignals(False)
+
+        # Restauramos a posição original do cursor
+        cursor.setPosition(pos)  # Retorna o cursor para a posição original
         entry.setTextCursor(cursor)
 
         # Ajusta a altura do QTextEdit, se necessário
@@ -156,12 +160,12 @@ def enviar_dados(self):
 
     for i, linha in enumerate(self.linhas, start=1):  # Agora percorre as linhas corretamente
         loc_raw = linha["loc"].toPlainText() or " "
-        loc_linhas = loc_raw.strip().splitlines()
-        loc = " ".join(loc_linhas)  # Junta tudo como uma linha só, para dividir corretamente
+        print(f"[DEBUG] Conteúdo do desc bruto: {repr(loc_raw)}")
+        loc = loc_raw.strip()
 
-        desc_raw = linha["desc"].toPlainText()
-        desc_linhas = desc_raw.strip().splitlines()
-        desc = " ".join(desc_linhas)  # Junta tudo como uma linha só, para dividir corretamente
+        desc_raw = linha["desc"].toPlainText() or " "
+        print(f"[DEBUG] Conteúdo do desc bruto: {repr(desc_raw)}")
+        desc = desc_raw.strip() 
 
         qtd = linha["qtd"].text() or " "
         val = linha["val"].text() or " "
