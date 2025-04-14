@@ -32,30 +32,25 @@ def dividir_texto_centralizando(texto, limite):
     return linhas_finais[:2]
 
 def ajustar_cursor(entry, texto_modificado):
-    # Obtemos o cursor atual e posição relativa
-    cursor = entry.textCursor()
-    pos_original = cursor.position()  # Captura a posição original no texto atual
-    
-    # Bloqueia os sinais e atualiza o texto
+    pos_original = entry.textCursor().position()
+
     entry.blockSignals(True)
     entry.setPlainText(texto_modificado)
     entry.blockSignals(False)
-    
-    # Verifica se a posição original é válida dentro do novo texto
+
+    # Cria um novo cursor depois de setar o texto
+    novo_cursor = entry.textCursor()
     if pos_original > len(texto_modificado):
-        pos_original = len(texto_modificado)  # Ajusta para o final, se necessário
+        pos_original = len(texto_modificado)
 
-    # Restaura o cursor na posição original
-    cursor.setPosition(pos_original, QTextCursor.MoveMode.KeepAnchor)  # Mantém a posição relativa
-    entry.setTextCursor(cursor)
-
+    novo_cursor.setPosition(pos_original)
+    entry.setTextCursor(novo_cursor)
 
 def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=False):    
 
     if isinstance(entry, QTextEdit):
-        texto = entry.toPlainText().upper()  # Transforma em maiúsculo
-        ajustar_cursor(entry, texto) 
-        linhas = texto.split("\n")  # Divide o texto em linhas
+        texto = entry.toPlainText().upper()
+        linhas = texto.split("\n")
         novas_linhas = []
 
         for linha in linhas:
@@ -66,22 +61,24 @@ def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_
             novas_linhas.append(linha)
             if len(novas_linhas) >= max_linhas:
                 break
-
-        # Junta o texto limitado
         texto_limitado = "\n".join(novas_linhas[:max_linhas])
-        entry.blockSignals(True)
-        entry.setPlainText(texto_limitado)
 
-        # Ajusta a altura do QTextEdit, se necessário
+        if texto_limitado != texto:  # Só atualiza se houver mudança
+            entry.blockSignals(True)
+            entry.setPlainText(texto_limitado)
+            entry.blockSignals(False)
+
+            ajustar_cursor(entry, texto_limitado)
+
         if ajustar_altura_flag:
             ajustar_altura(entry)
-        entry.blockSignals(False)
 
     elif isinstance(entry, QLineEdit):
-        texto = entry.text().upper()[:max_chars_por_linha]  # Transforma em maiúsculo e limita caracteres
-        entry.blockSignals(True)
-        entry.setText(texto)
-        entry.blockSignals(False)
+        texto = entry.text().upper()[:max_chars_por_linha]
+        if texto != entry.text():
+            entry.blockSignals(True)
+            entry.setText(texto)
+            entry.blockSignals(False)
 
 def ajustar_altura(entry):
 
