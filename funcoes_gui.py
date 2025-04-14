@@ -47,37 +47,48 @@ def ajustar_cursor(entry, texto_modificado):
     entry.setTextCursor(novo_cursor)
 
 def processar_texto(entry, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=False):    
-
     if isinstance(entry, QTextEdit):
-        texto = entry.toPlainText().upper()
-        linhas = texto.split("\n")
+        cursor = entry.textCursor()
+        pos_original = cursor.position()
+
+        texto = entry.toPlainText()
+        texto_maiusculo = texto.upper()
+
+        # Divide em linhas e aplica quebra
+        linhas = texto_maiusculo.split("\n")
         novas_linhas = []
 
         for linha in linhas:
-            # Divide linhas excedentes
             while len(linha) > max_chars_por_linha:
                 novas_linhas.append(linha[:max_chars_por_linha])
                 linha = linha[max_chars_por_linha:]
             novas_linhas.append(linha)
             if len(novas_linhas) >= max_linhas:
                 break
+
         texto_limitado = "\n".join(novas_linhas[:max_linhas])
 
-        if texto_limitado != texto:  # Só atualiza se houver mudança
+        if texto_limitado != texto:
             entry.blockSignals(True)
             entry.setPlainText(texto_limitado)
             entry.blockSignals(False)
 
-            ajustar_cursor(entry, texto_limitado)
+            # Restaura o cursor na posição anterior (ou o mais perto possível)
+            novo_cursor = entry.textCursor()
+            nova_pos = min(pos_original, len(texto_limitado))
+            novo_cursor.setPosition(nova_pos)
+            entry.setTextCursor(novo_cursor)
 
         if ajustar_altura_flag:
             ajustar_altura(entry)
 
     elif isinstance(entry, QLineEdit):
-        texto = entry.text().upper()[:max_chars_por_linha]
-        if texto != entry.text():
+        texto = entry.text()
+        texto_maiusculo = texto.upper()[:max_chars_por_linha]
+
+        if texto_maiusculo != texto:
             entry.blockSignals(True)
-            entry.setText(texto)
+            entry.setText(texto_maiusculo)
             entry.blockSignals(False)
 
 def ajustar_altura(entry):

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QRadioButton, QTextEdit, QGridLayout, QPushButton, QLabel, QLineEdit, QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QApplication, QWidget, QRadioButton, QTextEdit, QGridLayout, QPushButton, QLabel, QLineEdit, QComboBox
 from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas, processar_texto
 from PyQt6.QtGui import QIcon, QPixmap
 import sys
