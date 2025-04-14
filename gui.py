@@ -77,12 +77,11 @@ class PreencherPDFApp(QWidget):
         self.layout.addWidget(self.input_total_prazo, 3, 2)
 
         # Desconto
-        self.label_desconto = QLabel("DESCONTO")
+        self.label_desconto = QLabel("DESCONTO P/ PAG. A VISTA")
         self.layout.addWidget(self.label_desconto, 3, 3)
-        self.radio_5 = QRadioButton("5%")
-        self.radio_7 = QRadioButton("7%")
-        self.layout.addWidget(self.radio_5, 3, 4)
-        self.layout.addWidget(self.radio_7, 3, 5)
+        self.desconto = QComboBox()
+        
+        
 
         # Total à vista
         self.label_total_vista = QLabel("TOTAL A VISTA")
