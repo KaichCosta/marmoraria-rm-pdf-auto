@@ -10,7 +10,7 @@ QWidget {
     qproperty-alignment: AlignCenter;
     font-family: Verdana;
     font-size: 38pt;
-    color: red;
+    color: rgb(241, 2, 2);
 }
 
 #pdfinfo {
@@ -31,11 +31,11 @@ QTextEdit {
     max-height: 60px;
     font-size: 14pt;
     font-family: "Courier New";
-    selection-background-color: #bb0909; /* Destacar texto selecionado */
+    selection-background-color:rgb(128, 127, 127);
 }
 
 QTextEdit:focus {
-    border: 2px solid #007acc; /* Azul quando focado */
+    border: 2px solid rgb(129, 0, 0);
 }
 
 QTextEdit#entry_loc {
@@ -58,11 +58,11 @@ QLineEdit {
     min-height: 30px;
     font-size: 14pt;
     font-family: "Courier New";
-    selection-background-color: #009688; /* Destacar texto selecionado */
+    selection-background-color: rgb(128, 127, 127);
 }
 
 QLineEdit:focus {
-    border: 2px solid #007acc; /* Azul quando focado */
+    border: 2px solid rgb(129, 0, 0);
 }
 
 QLineEdit#entry_qtd {
@@ -84,11 +84,11 @@ QPushButton {
 }
 
 QPushButton:hover {
-    background-color: #005fa3; /* Azul mais escuro ao passar o mouse */
+    border:2px solid rgb(129, 0, 0);
 }
 
 QPushButton:pressed {
-    background-color: #003d73;
+    background-color: rgb(129, 0, 0);
 }
 
 QComboBox {

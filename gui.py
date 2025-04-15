@@ -49,13 +49,9 @@ class PreencherPDFApp(QWidget):
         self.logo.resize(150, 100)  # Define o tamanho (largura x altura)
         self.logo.move(680, 0)  # Posiciona no eixo
 
-        self.label_titulo = QLabel("Orçamento")
+        self.label_titulo = QLabel("ORÇAMENTO")
         self.label_titulo.setObjectName("titulo")
-        self.layout.addWidget(self.label_titulo, 0, 0, 1, 2)
-
-        self.btn_selecionar = QPushButton("Selecionar outro PDF")
-        self.btn_selecionar.clicked.connect(lambda: selecionar_pdf(self))
-        self.layout.addWidget(self.btn_selecionar, 0, 3, 1, 2)
+        self.layout.addWidget(self.label_titulo, 0, 0, 1, 3)
 
         self.linhas_layout.setColumnStretch(0, 1)  # LOCAL menor
         self.linhas_layout.setColumnStretch(1, 3)  # DESCRIÇÃO maior
@@ -100,7 +96,11 @@ class PreencherPDFApp(QWidget):
         self.btn_proxima_pagina = QPushButton("IR PARA PRÓXIMA PÁGINA")
         self.layout.addWidget(self.btn_proxima_pagina)  # Botão fora da grade
 
-        self.btn_preencher = QPushButton("Preencher PDF")
+        self.btn_selecionar = QPushButton("SELECIONAR OUTRO PDF")
+        self.btn_selecionar.clicked.connect(lambda: selecionar_pdf(self))
+        self.layout.addWidget(self.btn_selecionar)
+
+        self.btn_preencher = QPushButton("PREENCHER PDF")
         self.btn_preencher.clicked.connect(lambda: enviar_dados(self))
         self.layout.addWidget(self.btn_preencher)  # Botão fora da grade
 
