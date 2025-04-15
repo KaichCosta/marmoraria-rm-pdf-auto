@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import QTextEdit, QLineEdit, QFileDialog, QMessageBox
 from gerador_pdf import preencher_pdf, atualizar_posicoes
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QTextCursor   
+from PyQt6.QtCore import Qt   
 
 def dividir_texto_centralizando(texto, limite):
     linhas_usuario = texto.split("\n")
@@ -127,6 +126,7 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_val.setObjectName("entry_val")
     entry_val.setMaximumWidth(65)
     entry_val.setMaxLength(10)
+    entry_val.textChanged.connect(lambda: somar_valores_atualizar_label(app))
     entry_val.textChanged.connect(lambda: processar_texto(entry_val, max_linhas=1, max_chars_por_linha=10))
 
     # Adicionando os widgets ao grid, garantindo alinhamento
@@ -134,6 +134,7 @@ def adicionar_linhas(app, linha_num, y=None):
     app.linhas_layout.addWidget(entry_desc, linha_num, 1)
     app.linhas_layout.addWidget(entry_qtd, linha_num, 2)
     app.linhas_layout.addWidget(entry_val, linha_num, 3)
+
 
     # Incrementa o contador de linhas
     app.contador += 1
@@ -163,6 +164,17 @@ def adicionar_linhas(app, linha_num, y=None):
         atualizar_posicoes(chave, x, y)
         print(f"Atualizando {chave}: (x={x}, y={y})")
 
+def somar_valores_atualizar_label(app):
+    total = 0
+    for linha in app.linhas:
+        try:
+            val = float(linha["val"].text().replace(",", "."))
+            total += val
+        except ValueError:
+            print(f"O valor {linha['val'].text()} é invalido")
+
+    app.input_total_prazo.setText(f"{total:.2f}")
+    
 def selecionar_pdf(self):
     file_dialog = QFileDialog()
     file_path, _ = file_dialog.getOpenFileName(self, "Selecionar PDF", "", "Arquivos PDF (*.pdf)")

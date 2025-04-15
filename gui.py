@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QRadioButton, QTextEdit, QGridLayout, QPushButton, QLabel, QLineEdit, QComboBox
+from PyQt6.QtWidgets import QApplication, QWidget, QTextEdit, QGridLayout, QPushButton, QLabel, QLineEdit, QComboBox
 from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas, processar_texto
 from PyQt6.QtGui import QIcon, QPixmap
 import sys
@@ -72,22 +72,23 @@ class PreencherPDFApp(QWidget):
 
         # Total a prazo
         self.label_total_prazo = QLabel("TOTAL A PRAZO")
-        self.layout.addWidget(self.label_total_prazo, 3, 1)
-        self.input_total_prazo = QLineEdit()
-        self.layout.addWidget(self.input_total_prazo, 3, 2)
+        self.layout.addWidget(self.label_total_prazo, 3, 0)
+        self.input_total_prazo = QLabel("0,00")
+        self.layout.addWidget(self.input_total_prazo, 3, 1)
 
         # Desconto
         self.label_desconto = QLabel("DESCONTO P/ PAG. A VISTA")
         self.layout.addWidget(self.label_desconto, 3, 3)
         self.desconto = QComboBox()
-        
-        
+        self.desconto.addItems(["5%", "7%", "10%"])
+        self.desconto.setObjectName("desconto")
+        self.layout.addWidget(self.desconto, 3, 4)
 
         # Total à vista
         self.label_total_vista = QLabel("TOTAL A VISTA")
-        self.layout.addWidget(self.label_total_vista, 3, 6)
+        self.layout.addWidget(self.label_total_vista, 3, 5)
         self.input_total_vista = QLineEdit()
-        self.layout.addWidget(self.input_total_vista, 3, 7)
+        self.layout.addWidget(self.input_total_vista, 3, 6)
 
         # Observações
         self.label_obs = QLabel("OBSERVAÇÕES")
