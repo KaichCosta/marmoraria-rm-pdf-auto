@@ -167,13 +167,17 @@ def adicionar_linhas(app, linha_num, y=None):
 def somar_valores_atualizar_label(app):
     total = 0
     for linha in app.linhas:
+        texto_val = linha["val"].text().replace(",", ".").strip()
+        if not texto_val:
+            continue  # Campo vazio, ignora
         try:
             val = float(linha["val"].text().replace(",", "."))
             total += val
         except ValueError:
-            print(f"O valor {linha['val'].text()} é invalido")
+            if any(c.isdigit() for c in texto_val):  # Se digitou algo estranho tipo "1a", aí sim avisa
+                print(f"O valor '{linha['val'].text()}' é inválido")
 
-    app.input_total_prazo.setText(f"{total:.2f}")
+    app.input_total_prazo.setText(f"Total: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
     
 def selecionar_pdf(self):
     file_dialog = QFileDialog()
