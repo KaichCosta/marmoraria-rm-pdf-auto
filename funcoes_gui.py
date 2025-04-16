@@ -191,11 +191,9 @@ def enviar_dados(self):
 
     for i, linha in enumerate(self.linhas, start=1):  # Agora percorre as linhas corretamente
         loc_raw = linha["loc"].toPlainText() or " "
-        print(f"[DEBUG] Conteúdo do desc bruto: {repr(loc_raw)}")
         loc = loc_raw.strip()
 
         desc_raw = linha["desc"].toPlainText() or " "
-        print(f"[DEBUG] Conteúdo do desc bruto: {repr(desc_raw)}")
         desc = desc_raw.strip() 
 
         qtd = linha["qtd"].text() or " "
