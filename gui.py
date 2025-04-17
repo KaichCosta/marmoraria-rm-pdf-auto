@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QTextEdit, QGridLayout, QPushButton, QLabel, QLineEdit, QComboBox
+from PyQt6.QtWidgets import QApplication, QWidget, QTextEdit, QGridLayout, QPushButton, QLabel, QLineEdit, QComboBox, QScrollArea
 from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas, processar_texto
 from PyQt6.QtGui import QIcon, QPixmap
 import sys
@@ -20,12 +20,22 @@ class PreencherPDFApp(QWidget):
         self.layout = QGridLayout()
         self.setLayout(self.layout)
 
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+
+        self.scroll_widget = QWidget()  # Widget base pra aplicar o layout
+        self.grid_layout_linhas = QGridLayout(self.scroll_widget)
+
+        self.scroll_area.setWidget(self.scroll_widget)
+
+        self.layout.addWidget(self.scroll_area)
         # Grid separado para as linhas dinâmicas
         self.linhas_layout = QGridLayout()
         self.linhas_layout.setVerticalSpacing(5)  # Remove espaçamento vertical entre linhas
         self.linhas_layout.setHorizontalSpacing(0)  # Pequeno espaçamento horizontal
         self.linhas_layout.setContentsMargins(0, 0, 0, 0)  # Remove margens extras
-        self.layout.addLayout(self.linhas_layout, 1, 0, 1, 8)
+        self.scroll_widget.setLayout(self.linhas_layout)
+        self.layout.addWidget(self.scroll_area, 1, 0, 1, 8)
 
         self.entry_loc = QTextEdit()
         self.entry_loc.setPlaceholderText("LOCAL")
@@ -89,7 +99,8 @@ class PreencherPDFApp(QWidget):
         # Observações
         self.label_obs = QLabel("OBSERVAÇÕES")
         self.layout.addWidget(self.label_obs, 4, 0, 1, 2)
-        self.input_obs = QLineEdit()
+        self.input_obs = QTextEdit("Qualquer alteração que necessite de adequação, será cobrado a parte")
+        self.input_obs.setObjectName("obs")
         self.layout.addWidget(self.input_obs, 5, 0, 1, 8)
 
         # Botão Ir para próxima página
@@ -99,6 +110,10 @@ class PreencherPDFApp(QWidget):
         self.btn_selecionar = QPushButton("SELECIONAR OUTRO PDF")
         self.btn_selecionar.clicked.connect(lambda: selecionar_pdf(self))
         self.layout.addWidget(self.btn_selecionar)
+
+        self.input_nome_cliente = QLineEdit("NOME DO CLIENTE")
+        self.input_nome_cliente.setObjectName("nome_cliente")
+        self.layout.addWidget(self.input_nome_cliente)
 
         self.btn_preencher = QPushButton("PREENCHER PDF")
         self.btn_preencher.clicked.connect(lambda: enviar_dados(self))

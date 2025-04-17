@@ -166,6 +166,8 @@ def adicionar_linhas(app, linha_num, y=None):
 
 def somar_valores_atualizar_label(app):
     total = 0
+    erro = []
+
     for linha in app.linhas:
         texto_val = linha["val"].text().replace(",", ".").strip()
         if not texto_val:
@@ -174,8 +176,9 @@ def somar_valores_atualizar_label(app):
             val = float(linha["val"].text().replace(",", "."))
             total += val
         except ValueError:
-            if any(c.isdigit() for c in texto_val):  # Se digitou algo estranho tipo "1a", aí sim avisa
-                print(f"O valor '{linha['val'].text()}' é inválido")
+            erro = True
+            if erro:
+                QMessageBox.warning(app,"ERRO | VALOR OU CARACTERE INVÁLIDO ","USAR SOMENTE NÚMEROS E VIRGULA(,)")
 
     app.input_total_prazo.setText(f"Total: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
     
@@ -261,6 +264,6 @@ def enviar_dados(self):
         novo_pdf = self.pdf_path.replace(".pdf", " Orçamento.pdf")
         doc.save(novo_pdf)
         doc.close()
-        QMessageBox.information(self, "Sucesso", f"PDF salvo como: {novo_pdf}")
+        QMessageBox.information(self, "SUCESSO", f"PDF SALVO COMO: {novo_pdf}")
     else:
-        QMessageBox.warning(self, "Erro", "Ocorreu um erro ao preencher o PDF.")
+        QMessageBox.warning(self, "ERRO", "OCORREU UM ERRO EM PREENCHER O PDF.")

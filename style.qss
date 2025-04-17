@@ -1,6 +1,6 @@
 /* Estilo para a Janela */
 QWidget {
-    background-color: #e5e5e5;  /* Cinza claro */
+    background-color: #e5e5e5;  /* Cinza claro e5e5e5*/
     font-family: "Arial, sans-serif";
     
 }
@@ -47,6 +47,10 @@ QTextEdit#entry_desc {
     max-width: 505px;
 }
 
+QTextEdit#obs {
+    min-height: 30px;
+}
+
 /* Caixa de Entrada (LineEdit) */
 QLineEdit {
     background-color: #ffffff;
@@ -72,6 +76,10 @@ QLineEdit#entry_qtd {
 QLineEdit#entry_val {
     min-width: 115px;
     max-width: 115px;
+}
+
+QLineEdit#nome_cliente {
+    min-width: 250px;
 }
 
 /* Botões (PushButton) */
@@ -101,5 +109,5 @@ QComboBox {
 
 /* Mensagens Pop-up (MessageBox) */
 QMessageBox {
-    background-color: #ffffff;
+    border:2px solid rgb(75, 75, 75);
 }
