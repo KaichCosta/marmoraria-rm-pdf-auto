@@ -24,11 +24,16 @@ class PreencherPDFApp(QWidget):
         self.scroll_area.setWidgetResizable(True)
 
         self.scroll_widget = QWidget()  # Widget base pra aplicar o layout
-        self.grid_layout_linhas = QGridLayout(self.scroll_widget)
+        self.linhas_layout = QGridLayout()
+        self.linhas_layout.setVerticalSpacing(5)
+        self.linhas_layout.setHorizontalSpacing(0)
+        self.linhas_layout.setContentsMargins(0, 0, 0, 0)
 
+        self.scroll_widget.setLayout(self.linhas_layout)
         self.scroll_area.setWidget(self.scroll_widget)
+        # Adiciona o scroll na interface
+        self.layout.addWidget(self.scroll_area, 1, 0, 1, 8)
 
-        self.layout.addWidget(self.scroll_area)
         # Grid separado para as linhas dinâmicas
         self.linhas_layout = QGridLayout()
         self.linhas_layout.setVerticalSpacing(5)  # Remove espaçamento vertical entre linhas
