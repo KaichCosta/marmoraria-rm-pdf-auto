@@ -39,14 +39,15 @@ class PreencherPDFApp(QWidget):
     def build_interface(self):
         self.setWindowTitle("Orçamento PDF Marmoraria R&M | CNPJ 32.504.738/0001-82")
         self.setWindowIcon(QIcon("pdficon.png"))
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 750, 200)
 
         self.logo = QLabel()
         self.logo.setPixmap(QPixmap("logo-marmoraria.png"))
         self.logo.setScaledContents(True)
-        self.logo.resize(150, 100)
-        self.logo.setMaximumHeight(100)
-        self.scroll_layout.addWidget(self.logo, 0, 7)
+        #self.logo.resize(150, 100)
+        #self.logo.setMaximumHeight(100)
+        self.logo.move(664, 0)
+        self.scroll_layout.addWidget(self.logo, 0, 1)
 
         self.label_titulo = QLabel("ORÇAMENTO")
         self.label_titulo.setObjectName("titulo")
