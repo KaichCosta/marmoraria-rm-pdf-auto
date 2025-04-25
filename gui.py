@@ -27,6 +27,9 @@ class PreencherPDFApp(QWidget):
         self.linhas_layout.setContentsMargins(0, 0, 0, 0)  # Remove margens extras
         self.layout.addLayout(self.linhas_layout, 1, 0, 1, 8)
     
+        self.label_pdf = QLabel(".")
+        self.layout.addWidget(self.label_pdf, 0, 0, 1, 2)
+
         self.entry_loc = QTextEdit()
         self.entry_loc.setPlaceholderText("LOCAL")
         self.entry_loc.textChanged.connect(lambda: processar_texto(self.entry_loc, 2, 24))
@@ -100,7 +103,8 @@ class PreencherPDFApp(QWidget):
         self.btn_selecionar.clicked.connect(lambda: selecionar_pdf(self))
         self.layout.addWidget(self.btn_selecionar)
 
-        self.input_nome_cliente = QLineEdit("NOME DO CLIENTE")
+        self.input_nome_cliente = QLineEdit()
+        self.input_nome_cliente.setPlaceholderText("NOME DO CLIENTE")
         self.layout.addWidget(self.input_nome_cliente, 6, 4, 1, 2)
 
         self.btn_preencher = QPushButton("PREENCHER PDF")

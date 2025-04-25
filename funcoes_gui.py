@@ -104,6 +104,7 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_loc.setPlaceholderText("LOCAL")
     entry_loc.setObjectName("entry_loc")
     entry_loc.setFixedHeight(30)  # Altura inicial mínima
+    entry_loc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     entry_loc.textChanged.connect(lambda: processar_texto(entry_loc, max_linhas=2, max_chars_por_linha=12, ajustar_altura_flag=True))
 
 
