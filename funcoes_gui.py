@@ -104,22 +104,22 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_loc.setPlaceholderText("LOCAL")
     entry_loc.setObjectName("entry_loc")
     entry_loc.setFixedHeight(30)  # Altura inicial mínima
-    entry_loc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     entry_loc.textChanged.connect(lambda: processar_texto(entry_loc, max_linhas=2, max_chars_por_linha=12, ajustar_altura_flag=True))
+
 
     entry_desc = QTextEdit()
     entry_desc.setPlaceholderText("DESCRIÇÃO")
     entry_desc.setObjectName("entry_desc")
     entry_desc.setFixedHeight(30)  # Altura inicial mínima
     entry_desc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-    entry_desc.textChanged.connect(lambda: processar_texto(entry_desc, 2, 45, True, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=True))
+    entry_desc.textChanged.connect(lambda: processar_texto(entry_desc, max_linhas=2, max_chars_por_linha=45, ajustar_altura_flag=True))
 
     entry_qtd = QLineEdit()
     entry_qtd.setPlaceholderText("QUANTIDADE")
     entry_qtd.setObjectName("entry_qtd")
     entry_qtd.setMaximumWidth(75)
     entry_qtd.setMaxLength(6)
-    entry_qtd.textChanged.connect(lambda: processar_texto(entry_qtd, 1, 6,max_linhas=1, max_chars_por_linha=6))
+    entry_qtd.textChanged.connect(lambda: processar_texto(entry_qtd, max_linhas=1, max_chars_por_linha=6))
 
     entry_val = QLineEdit()
     entry_val.setPlaceholderText("VALOR")
@@ -127,7 +127,8 @@ def adicionar_linhas(app, linha_num, y=None):
     entry_val.setMaximumWidth(65)
     entry_val.setMaxLength(10)
     entry_val.textChanged.connect(lambda: somar_valores_atualizar_label(app))
-    entry_val.textChanged.connect(lambda: processar_texto(entry_val, 1, 10, max_linhas=1, max_chars_por_linha=10))
+    entry_val.textChanged.connect(lambda: processar_texto(entry_val, max_linhas=1, max_chars_por_linha=10))
+
 
     # Adicionando os widgets ao grid, garantindo alinhamento
     app.linhas_layout.addWidget(entry_loc, linha_num, 0)
