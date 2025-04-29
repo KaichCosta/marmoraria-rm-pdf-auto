@@ -1,5 +1,6 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QTextEdit, QGridLayout, QVBoxLayout, QScrollArea, QPushButton, QLabel, QLineEdit, QComboBox
+from PyQt6.QtWidgets import QApplication, QWidget, QTextEdit, QGridLayout, QSizePolicy, QVBoxLayout, QScrollArea, QPushButton, QLabel, QLineEdit, QComboBox
 from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas, processar_texto
+from PyQt6.QtWidgets import QSizePolicy
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtCore import Qt
 import sys
@@ -59,11 +60,13 @@ class PreencherPDFApp(QWidget):
         self.setWindowIcon(QIcon("pdficon.png"))
         self.setGeometry(10, 220, 950, 400)
 
-        #self.logo = QLabel(self)
-        #self.logo.setPixmap(QPixmap("logo-marmoraria.png"))
-        #self.logo.setScaledContents(True)
-        #self.logo.resize(100, 80)
-        #self.layout.addWidget(self.logo, 0, 0, 1, 4)
+        self.logo = QLabel()
+        self.logo.setPixmap(QPixmap("logo-marmoraria.png"))
+        self.logo.setScaledContents(True)  # Redimensiona mantendo a imagem
+        self.logo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.logo.setMaximumSize(200, 120)  # Tamanho máximo (ajuste se quiser)
+        self.logo.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
+        self.layout.addWidget(self.logo, 0, 7, 0, 1)
 
         self.label_titulo = QLabel("ORÇAMENTO")
         self.label_titulo.setObjectName("titulo")
