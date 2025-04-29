@@ -4,6 +4,27 @@ QWidget {
     font-family: "Arial, sans-serif";
     
 }
+/* Margem causada pelo layout  */
+
+QScrollArea {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+
+/* Barra lateral*/
+QScrollBar:vertical {
+    background: #f0f0f0;       
+    width: 5px;               
+    margin: 0px;              
+    border: none;
+}
+
+QScrollBar::handle:vertical {
+    background: rgb(75, 75, 75);          /* Cor do scroll */
+    min-height: 20px;
+    border-radius: 30px;
+}
 
 /* Texto do titulo (Label) */
 #titulo {
