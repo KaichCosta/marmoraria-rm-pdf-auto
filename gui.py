@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QTextEdit, QGridLayout, QPushButton, QLabel, QLineEdit, QComboBox
 from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas, processar_texto
 from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtCore import Qt
 import sys
 
 pdf_padrao = "C:/Users/User/Documents/GitHub/marmoraria-rm-pdf-auto/orcamento-vazio.pdf"
@@ -28,6 +29,8 @@ class PreencherPDFApp(QWidget):
         self.layout.addLayout(self.linhas_layout, 1, 0, 1, 8)
     
         self.label_pdf = QLabel(".")
+        self.label_pdf.setFixedHeight(20)  # Altura fixa
+        self.label_pdf.setMaximumWidth(300)  # Largura máxima
         self.layout.addWidget(self.label_pdf, 0, 0, 1, 2)
 
         self.entry_loc = QTextEdit()

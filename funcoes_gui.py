@@ -189,7 +189,8 @@ def selecionar_pdf(self):
     file_path, _ = file_dialog.getOpenFileName(self, "Selecionar PDF", "", "Arquivos PDF (*.pdf)")
     if file_path:
         self.pdf_path = file_path
-        self.label_pdf.setText(f"Selecionado: {file_path}")
+        self.label_pdf.setText("PDF selecionado!")
+        QMessageBox.information(self, "PDF BASE ALTERADO COM SUCESSO PARA:", f"{file_path}")
 
 def enviar_dados(self):
     if not self.pdf_path:
