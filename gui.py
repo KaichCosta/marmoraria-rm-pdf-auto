@@ -64,9 +64,9 @@ class PreencherPDFApp(QWidget):
         self.logo.setPixmap(QPixmap("logo-marmoraria.png"))
         self.logo.setScaledContents(True)  # Redimensiona mantendo a imagem
         self.logo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.logo.setMaximumSize(200, 120)  # Tamanho máximo (ajuste se quiser)
+        self.logo.setMaximumSize(150, 108)  # Tamanho máximo (ajuste se quiser)
         self.logo.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
-        self.layout.addWidget(self.logo, 0, 7, 0, 1)
+        self.layout.addWidget(self.logo, 0, 7, 1, 1)
 
         self.label_titulo = QLabel("ORÇAMENTO")
         self.label_titulo.setObjectName("titulo")

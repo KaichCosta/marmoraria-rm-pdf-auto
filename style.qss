@@ -31,6 +31,8 @@ QScrollBar::handle:vertical {
     qproperty-alignment: AlignCenter;
     font-family: Verdana;
     font-size: 38pt;
+    padding: 0px;
+    margin: 0px;
     color: rgb(241, 2, 2);
 }
 
