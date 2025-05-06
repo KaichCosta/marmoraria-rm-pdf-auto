@@ -33,7 +33,9 @@ QScrollBar::handle:vertical {
     font-size: 38pt;
     padding: 0px;
     margin: 0px;
-    color: rgb(241, 2, 2);
+    color: #8c171a;
+    text-shadow: 3px 3px 4px rgba(0, 0, 0, 0.4);
+    font-weight: 600;
 }
 
 #pdfinfo {

@@ -182,7 +182,7 @@ def somar_valores_atualizar_label(app):
             if erro:
                 QMessageBox.warning(app,"ERRO | VALOR OU CARACTERE INVÁLIDO ","USAR SOMENTE NÚMEROS E VIRGULA(,)")
 
-    app.input_total_prazo.setText(f"Total: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+    app.input_total_prazo.setText(f"TOTAL A PRAZO: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
     
 def selecionar_pdf(self):
     file_dialog = QFileDialog()
@@ -270,3 +270,22 @@ def enviar_dados(self):
         QMessageBox.information(self, "SUCESSO", f"PDF SALVO COMO: {novo_pdf}")
     else:
         QMessageBox.warning(self, "ERRO", "OCORREU UM ERRO EM PREENCHER O PDF.")
+
+def escolher_desconto(self):
+    try:
+        # Pega o texto do desconto, remove %, converte pra float
+        desconto_texto = self.desconto.currentText().replace("%", "")
+        desconto = float(desconto_texto)
+
+        # Pega o valor total a prazo, troca vírgula por ponto e converte
+        total_str = self.input_total_prazo.text().replace(",", ".")
+        total = float(total_str)
+
+        # Aplica o desconto
+        total_com_desconto = total * (1 - desconto / 100)
+
+        # Atualiza o QLabel do total à vista
+        self.input_total_vista.setText(f"{total_com_desconto:.2f}".replace(".", ","))
+    except Exception as e:
+        print(f"Erro ao aplicar desconto: {e}")
+        self.input_total_vista.setText("Erro")

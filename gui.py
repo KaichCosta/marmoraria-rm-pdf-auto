@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QTextEdit, QGridLayout, QSizePolicy, QVBoxLayout, QScrollArea, QPushButton, QLabel, QLineEdit, QComboBox
-from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas, processar_texto
+from funcoes_gui import selecionar_pdf, enviar_dados, adicionar_linhas, processar_texto, escolher_desconto
 from PyQt6.QtWidgets import QSizePolicy
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtCore import Qt
@@ -64,13 +64,13 @@ class PreencherPDFApp(QWidget):
         self.logo.setPixmap(QPixmap("logo-marmoraria.png"))
         self.logo.setScaledContents(True)  # Redimensiona mantendo a imagem
         self.logo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.logo.setMaximumSize(150, 108)  # Tamanho máximo (ajuste se quiser)
+        self.logo.setMaximumSize(100, 72)  # Tamanho máximo (ajuste se quiser)
         self.logo.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
-        self.layout.addWidget(self.logo, 0, 7, 1, 1)
+        self.layout.addWidget(self.logo, 0, 5, 1, 1)
 
         self.label_titulo = QLabel("ORÇAMENTO")
         self.label_titulo.setObjectName("titulo")
-        self.layout.addWidget(self.label_titulo, 0, 0, 1, 3)
+        self.layout.addWidget(self.label_titulo, 0, 1, 1, 3)
 
         self.linhas_layout.setColumnStretch(0, 1)
         self.linhas_layout.setColumnStretch(1, 3)
@@ -85,9 +85,7 @@ class PreencherPDFApp(QWidget):
         self.btn_nova_linha.clicked.connect(lambda: adicionar_linhas(self, len(self.linhas) + 1))
         self.layout.addWidget(self.btn_nova_linha, 2, 0, 1, 8)
 
-        self.label_total_prazo = QLabel("TOTAL A PRAZO")
-        self.layout.addWidget(self.label_total_prazo, 3, 0)
-        self.input_total_prazo = QLabel("0,00")
+        self.input_total_prazo = QLabel("TOTAL A PRAZO: 0,00")
         self.layout.addWidget(self.input_total_prazo, 3, 1)
 
         self.label_desconto = QLabel("DESCONTO P/ PAG. A VISTA")
@@ -95,11 +93,12 @@ class PreencherPDFApp(QWidget):
         self.desconto = QComboBox()
         self.desconto.addItems(["5%", "7%", "10%"])
         self.desconto.setObjectName("desconto")
+        self.desconto.currentIndexChanged.connect(lambda: escolher_desconto(self))
         self.layout.addWidget(self.desconto, 3, 4)
 
         self.label_total_vista = QLabel("TOTAL A VISTA")
         self.layout.addWidget(self.label_total_vista, 3, 5)
-        self.input_total_vista = QLineEdit()
+        self.input_total_vista = QLabel("0,00")
         self.layout.addWidget(self.input_total_vista, 3, 6)
 
         self.label_obs = QLabel("OBSERVAÇÕES")
