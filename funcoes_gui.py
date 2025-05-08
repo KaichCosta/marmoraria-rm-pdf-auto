@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QTextEdit, QLineEdit, QFileDialog, QMessageBox
 from gerador_pdf import preencher_pdf, atualizar_posicoes
-from PyQt6.QtCore import Qt   
+from PyQt6.QtCore import Qt
+import re   
 
 def dividir_texto_centralizando(texto, limite):
     linhas_usuario = texto.split("\n")
@@ -278,9 +279,15 @@ def escolher_desconto(self):
         desconto = float(desconto_texto)
 
         # Pega o valor total a prazo, troca vírgula por ponto e converte
-        total_str = self.input_total_prazo.text().replace(",", ".")
-        total = float(total_str)
-
+        total_str = self.input_total_prazo.text()
+        match = re.search(r"[\d.,]+", total_str)
+        if not match:
+            raise ValueError("Valor numérico não encontrado")
+        
+        # Converte para float (trocando vírgula por ponto com replace)
+        total = float(match.group().replace(".", "").replace(",", "."))
+        self.input_total_prazo.setText(f"TOTAL A PRAZO: R$ {total:,.2f}".replace(".", ","))
+        escolher_desconto(self)  # <- Aqui você atualiza o valor à vista também
         # Aplica o desconto
         total_com_desconto = total * (1 - desconto / 100)
 

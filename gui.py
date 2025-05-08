@@ -91,7 +91,7 @@ class PreencherPDFApp(QWidget):
         self.label_desconto = QLabel("DESCONTO P/ PAG. A VISTA")
         self.layout.addWidget(self.label_desconto, 3, 3)
         self.desconto = QComboBox()
-        self.desconto.addItems(["5%", "7%", "10%"])
+        self.desconto.addItems(["0%", "5%", "7%", "10%"])
         self.desconto.setObjectName("desconto")
         self.desconto.currentIndexChanged.connect(lambda: escolher_desconto(self))
         self.layout.addWidget(self.desconto, 3, 4)
